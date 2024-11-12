@@ -67,8 +67,7 @@ wait_for_conversion:
 	ldi r16, (1 << ADC_RESRDY_bp)
 	sts ADC0_INTFLAGS, r16
 
-	; Load the ADC result into r24:r25 and return. 
-	; This follows the calling convention expected by AVR-GCC for a uint16_t return type.
+
 	lds r24, ADC0_RES
 	clr r25
 	ret
