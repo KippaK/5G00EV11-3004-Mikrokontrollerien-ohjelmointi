@@ -22,10 +22,10 @@
   <FILE>adc_4809_asm.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>26</LINE></init>
-  <loop><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>92</LINE></loop>
-  <adc_read><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>47</LINE></adc_read>
-  <wait_for_conversion><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>52</LINE></wait_for_conversion>
-  <drive_leds><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>66</LINE></drive_leds>
+  <init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>41</LINE></init>
+  <loop><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>106</LINE></loop>
+  <adc_read><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>62</LINE></adc_read>
+  <wait_for_conversion><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>67</LINE></wait_for_conversion>
+  <drive_leds><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>80</LINE></drive_leds>
  </LABELS>
 </ASSEMBLER_INFO>

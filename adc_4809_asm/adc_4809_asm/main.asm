@@ -23,15 +23,20 @@
 ; ADC0_COMMAND
 .equ ADC_STCONV = 0b1
 
-.equ LED0_PORT_REQ_DIR = PORTF_DIR
-.equ LED1_PORT_REQ_DIR = PORTA_DIR
-.equ LED2_PORT_REQ_DIR = PORTE_DIR
-.equ LED3_PORT_REQ_DIR = PORTB_DIR
+.equ LED0_REQ_DIR = PORTF_DIR
+.equ LED1_REQ_DIR = PORTA_DIR
+.equ LED2_REQ_DIR = PORTE_DIR
+.equ LED3_REQ_DIR = PORTB_DIR
 
-.equ LED0_PIN_MASK = 0x10
-.equ LED1_PIN_MASK = 0x10
-.equ LED2_PIN_MASK = 0x10
-.equ LED3_PIN_MASK = 0x10
+.equ LED0_REQ_OUT = PORTF_OUT
+.equ LED1_REQ_OUT = PORTA_OUT
+.equ LED2_REQ_OUT = PORTE_OUT
+.equ LED3_REQ_OUT = PORTB_OUT
+
+.equ LED0_MASK = 0x10
+.equ LED1_MASK = 0x02
+.equ LED2_MASK = 0x08
+.equ LED3_MASK = 0x01
 
 init:
 	; ADC init
@@ -43,14 +48,14 @@ init:
 	sts ADC0_CTRLA, r16
 
 	; Port Init
-	ldi r16, 0x10
-	sts LED0_PORT_REQ_DIR, r16
-	ldi r16, 0x02
-	sts LED1_PORT_REQ_DIR, r16
-	ldi r16, 0x08
-	sts LED2_PORT_REQ_DIR, r16
-	ldi r16, 0x01
-	sts LED3_PORT_REQ_DIR, r16
+	ldi r16, LED0_MASK
+	sts LED0_REQ_DIR, r16
+	ldi r16, LED1_MASK
+	sts LED1_REQ_DIR, r16
+	ldi r16, LED2_MASK
+	sts LED2_REQ_DIR, r16
+	ldi r16, LED3_MASK
+	sts LED3_REQ_DIR, r16
 
 	rjmp loop
 
@@ -73,28 +78,28 @@ wait_for_conversion:
 	ret
 
 drive_leds:
-	lds r20, PORTF_OUT
-	cbr r20, 0x10
-	lds r21, PORTA_OUT
-	cbr r21, 0x02
-	lds r22, PORTE_OUT
-	cbr r22, 0x08
-	lds r23, PORTB_OUT
-	cbr r23, 0x01
+	lds r20, LED0_REQ_OUT
+	cbr r20, LED0_MASK
+	lds r21, LED1_REQ_OUT
+	cbr r21, LED1_MASK
+	lds r22, LED2_REQ_OUT
+	cbr r22, LED2_MASK
+	lds r23, LED3_REQ_OUT
+	cbr r23, LED3_MASK
 
 	sbrc r24, 7
-	sbr r20, 0x10
+	sbr r20, LED0_MASK
 	sbrc r24, 6
-	sbr r21, 0x02
+	sbr r21, LED1_MASK
 	sbrc r24, 5
-	sbr r22, 0x08
+	sbr r22, LED2_MASK
 	sbrc r24, 4
-	sbr r23, 0x01
+	sbr r23, LED3_MASK
 
-	sts PORTF_OUT, r20
-	sts PORTA_OUT, r21
-	sts PORTE_OUT, r22
-	sts PORTB_OUT, r23
+	sts LED0_REQ_OUT, r20
+	sts LED1_REQ_OUT, r21
+	sts LED2_REQ_OUT, r22
+	sts LED3_REQ_OUT, r23
 
 	ret
 

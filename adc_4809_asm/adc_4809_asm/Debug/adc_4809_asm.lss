@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm Tue Nov 12 17:53:37 2024
+AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm Tue Nov 12 20:35:00 2024
 
 [builtin](2): Including file 'E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
 [builtin](2): Including file 'E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
@@ -4537,6 +4537,21 @@ AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\a
                                  ; ADC0_COMMAND
                                  .equ ADC_STCONV = 0b1
                                  
+                                 .equ LED0_REQ_DIR = PORTF_DIR
+                                 .equ LED1_REQ_DIR = PORTA_DIR
+                                 .equ LED2_REQ_DIR = PORTE_DIR
+                                 .equ LED3_REQ_DIR = PORTB_DIR
+                                 
+                                 .equ LED0_REQ_OUT = PORTF_OUT
+                                 .equ LED1_REQ_OUT = PORTA_OUT
+                                 .equ LED2_REQ_OUT = PORTE_OUT
+                                 .equ LED3_REQ_OUT = PORTB_OUT
+                                 
+                                 .equ LED0_MASK = 0x10
+                                 .equ LED1_MASK = 0x02
+                                 .equ LED2_MASK = 0x08
+                                 .equ LED3_MASK = 0x01
+                                 
                                  init:
                                  	; ADC init
 000000 e101                      	ldi r16, ADC_CTRLC_CONF
@@ -4547,14 +4562,14 @@ AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\a
 000007 9300 0600                 	sts ADC0_CTRLA, r16
                                  
                                  	; Port Init
-000009 e100                      	ldi r16, 0x10
-00000a 9300 04a0                 	sts PORTF_DIR, r16
-00000c e002                      	ldi r16, 0x02
-00000d 9300 0400                 	sts PORTA_DIR, r16
-00000f e008                      	ldi r16, 0x08
-000010 9300 0480                 	sts PORTE_DIR, r16
-000012 e001                      	ldi r16, 0x01
-000013 9300 0420                 	sts PORTB_DIR, r16
+000009 e100                      	ldi r16, LED0_MASK
+00000a 9300 04a0                 	sts LED0_REQ_DIR, r16
+00000c e002                      	ldi r16, LED1_MASK
+00000d 9300 0400                 	sts LED1_REQ_DIR, r16
+00000f e008                      	ldi r16, LED2_MASK
+000010 9300 0480                 	sts LED2_REQ_DIR, r16
+000012 e001                      	ldi r16, LED3_MASK
+000013 9300 0420                 	sts LED3_REQ_DIR, r16
                                  
 000015 c02b                      	rjmp loop
                                  
@@ -4571,35 +4586,34 @@ AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\a
 00001d e001                      	ldi r16, (1 << ADC_RESRDY_bp)
 00001e 9300 060b                 	sts ADC0_INTFLAGS, r16
                                  
-                                 	; Load the ADC result into r24:r25 and return. 
-                                 	; This follows the calling convention expected by AVR-GCC for a uint16_t return type.
+                                 
 000020 9180 0610                 	lds r24, ADC0_RES
 000022 2799                      	clr r25
 000023 9508                      	ret
                                  
                                  drive_leds:
-000024 9140 04a4                 	lds r20, PORTF_OUT
-000026 7e4f                      	cbr r20, 0x10
-000027 9150 0404                 	lds r21, PORTA_OUT
-000029 7f5d                      	cbr r21, 0x02
-00002a 9160 0484                 	lds r22, PORTE_OUT
-00002c 7f67                      	cbr r22, 0x08
-00002d 9170 0424                 	lds r23, PORTB_OUT
-00002f 7f7e                      	cbr r23, 0x01
+000024 9140 04a4                 	lds r20, LED0_REQ_OUT
+000026 7e4f                      	cbr r20, LED0_MASK
+000027 9150 0404                 	lds r21, LED1_REQ_OUT
+000029 7f5d                      	cbr r21, LED1_MASK
+00002a 9160 0484                 	lds r22, LED2_REQ_OUT
+00002c 7f67                      	cbr r22, LED2_MASK
+00002d 9170 0424                 	lds r23, LED3_REQ_OUT
+00002f 7f7e                      	cbr r23, LED3_MASK
                                  
 000030 fd87                      	sbrc r24, 7
-000031 6140                      	sbr r20, 0x10
+000031 6140                      	sbr r20, LED0_MASK
 000032 fd86                      	sbrc r24, 6
-000033 6052                      	sbr r21, 0x02
+000033 6052                      	sbr r21, LED1_MASK
 000034 fd85                      	sbrc r24, 5
-000035 6068                      	sbr r22, 0x08
+000035 6068                      	sbr r22, LED2_MASK
 000036 fd84                      	sbrc r24, 4
-000037 6071                      	sbr r23, 0x01
+000037 6071                      	sbr r23, LED3_MASK
                                  
-000038 9340 04a4                 	sts PORTF_OUT, r20
-00003a 9350 0404                 	sts PORTA_OUT, r21
-00003c 9360 0484                 	sts PORTE_OUT, r22
-00003e 9370 0424                 	sts PORTB_OUT, r23
+000038 9340 04a4                 	sts LED0_REQ_OUT, r20
+00003a 9350 0404                 	sts LED1_REQ_OUT, r21
+00003c 9360 0484                 	sts LED2_REQ_OUT, r22
+00003e 9370 0424                 	sts LED3_REQ_OUT, r23
                                  
 000040 9508                      	ret
                                  
