@@ -1,18 +1,18 @@
 <ASSEMBLER_INFO>
  <VERSION>2.2.8</VERSION>
  <DEVICE>"ATmega4809"</DEVICE>
- <WORKING_DIR>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\Debug</WORKING_DIR>
+ <WORKING_DIR>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\adc_4809_asm\adc_4809_asm\Debug</WORKING_DIR>
  <INCLUDE_PATH>
-  <DIR>E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
-  <DIR>E:\Sovellukset\MicrochipStudio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</SOURCE_FILE>
  <INCLUDED_FILES>
-  <FILE>E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc</FILE>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\Debug\adc_4809_asm.obj</FILE>
+  <FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\adc_4809_asm\adc_4809_asm\Debug\adc_4809_asm.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
   <FILE>adc_4809_asm.hex</FILE>
@@ -22,10 +22,10 @@
   <FILE>adc_4809_asm.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>41</LINE></init>
-  <loop><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>106</LINE></loop>
-  <adc_read><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>62</LINE></adc_read>
-  <wait_for_conversion><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>67</LINE></wait_for_conversion>
-  <drive_leds><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>80</LINE></drive_leds>
+  <init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>41</LINE></init>
+  <loop><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>106</LINE></loop>
+  <adc_read><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>62</LINE></adc_read>
+  <wait_for_conversion><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>67</LINE></wait_for_conversion>
+  <drive_leds><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\adc_4809_asm\adc_4809_asm\main.asm</FILE><LINE>80</LINE></drive_leds>
  </LABELS>
 </ASSEMBLER_INFO>

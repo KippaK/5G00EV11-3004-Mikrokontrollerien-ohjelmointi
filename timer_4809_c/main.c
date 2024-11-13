@@ -12,12 +12,9 @@
 void setupTimer0(void) {
 	TCA0.SINGLE.CTRLA = 0;
 	TCA0.SINGLE.CTRLB = 0;
+	// Top value
 	TCA0.SINGLE.PER = 0xFFFF;
-	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;
-}
-
-uint16_t readTimer0(void) {
-	return TCA0.SINGLE.CNT;
+	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV256_gc | TCA_SINGLE_ENABLE_bm;
 }
 
 void setup() {
@@ -26,9 +23,7 @@ void setup() {
 }
 
 void loop() {
-	uint16_t current_timer_value = readTimer0();
-	        
-	if (current_timer_value % 2 == 0) {
+	if ((TCA0.SINGLE.CNT >> 10) % 2 == 0) {
 		PORTB.OUT = 0xFF;
 	}
 	else {

@@ -255,13 +255,10 @@ END GROUP
  .text.setupTimer0
                 0x000000b8       0x16 main.o
                 0x000000b8                setupTimer0
- .text.readTimer0
-                0x000000ce        0xa main.o
-                0x000000ce                readTimer0
- .text.setup    0x000000d8        0xc main.o
-                0x000000d8                setup
- .text.loop     0x000000e4       0x16 main.o
-                0x000000e4                loop
+ .text.setup    0x000000ce        0xc main.o
+                0x000000ce                setup
+ .text.loop     0x000000da       0x20 main.o
+                0x000000da                loop
  .text.main     0x000000fa        0xa main.o
                 0x000000fa                main
                 0x00000104                . = ALIGN (0x2)
@@ -383,38 +380,38 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x40
+.debug_aranges  0x00000000       0x38
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x40 main.o
+                0x00000000       0x38 main.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x2dbd
+.debug_info     0x00000000     0x2d8a
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000     0x248a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega4809/avrxmega3/crtatmega4809.o
- .debug_info    0x0000248a      0x933 main.o
+ .debug_info    0x0000248a      0x900 main.o
 
-.debug_abbrev   0x00000000     0x240e
+.debug_abbrev   0x00000000     0x23fd
  *(.debug_abbrev)
  .debug_abbrev  0x00000000     0x2296 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega4809/avrxmega3/crtatmega4809.o
- .debug_abbrev  0x00002296      0x178 main.o
+ .debug_abbrev  0x00002296      0x167 main.o
 
-.debug_line     0x00000000      0x31a
+.debug_line     0x00000000      0x2f8
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x187 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega4809/avrxmega3/crtatmega4809.o
- .debug_line    0x00000187      0x193 main.o
+ .debug_line    0x00000187      0x171 main.o
 
-.debug_frame    0x00000000       0x64
+.debug_frame    0x00000000       0x54
  *(.debug_frame)
- .debug_frame   0x00000000       0x64 main.o
+ .debug_frame   0x00000000       0x54 main.o
 
-.debug_str      0x00000000     0x1473
+.debug_str      0x00000000     0x1456
  *(.debug_str)
  .debug_str     0x00000000      0xf85 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega4809/avrxmega3/crtatmega4809.o
- .debug_str     0x00000f85      0x4ee main.o
-                                0x531 (size before relaxing)
+ .debug_str     0x00000f85      0x4d1 main.o
+                                0x514 (size before relaxing)
 
 .debug_loc
  *(.debug_loc)
@@ -437,9 +434,9 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x30
+.debug_ranges   0x00000000       0x28
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x30 main.o
+ .debug_ranges  0x00000000       0x28 main.o
 
 .debug_macro
  *(.debug_macro)

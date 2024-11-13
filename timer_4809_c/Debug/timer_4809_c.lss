@@ -11,19 +11,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000018c  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000040  00000000  00000000  000001cc  2**0
+  4 .debug_aranges 00000038  00000000  00000000  000001cc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00002dbd  00000000  00000000  0000020c  2**0
+  5 .debug_info   00002d8a  00000000  00000000  00000204  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000240e  00000000  00000000  00002fc9  2**0
+  6 .debug_abbrev 000023fd  00000000  00000000  00002f8e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000031a  00000000  00000000  000053d7  2**0
+  7 .debug_line   000002f8  00000000  00000000  0000538b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000064  00000000  00000000  000056f4  2**2
+  8 .debug_frame  00000054  00000000  00000000  00005684  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00001473  00000000  00000000  00005758  2**0
+  9 .debug_str    00001456  00000000  00000000  000056d8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000030  00000000  00000000  00006bcb  2**0
+ 10 .debug_ranges 00000028  00000000  00000000  00006b2e  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -100,41 +100,34 @@ void setupTimer0(void) {
   c2:	9f ef       	ldi	r25, 0xFF	; 255
   c4:	86 a3       	std	Z+38, r24	; 0x26
   c6:	97 a3       	std	Z+39, r25	; 0x27
-	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;
-  c8:	81 e0       	ldi	r24, 0x01	; 1
+	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV256_gc | TCA_SINGLE_ENABLE_bm;
+  c8:	8d e0       	ldi	r24, 0x0D	; 13
   ca:	80 83       	st	Z, r24
   cc:	08 95       	ret
 
-000000ce <readTimer0>:
+000000ce <setup>:
 }
-
-uint16_t readTimer0(void) {
-	return TCA0.SINGLE.CNT;
-  ce:	80 91 20 0a 	lds	r24, 0x0A20	; 0x800a20 <__TEXT_REGION_LENGTH__+0x7f4a20>
-  d2:	90 91 21 0a 	lds	r25, 0x0A21	; 0x800a21 <__TEXT_REGION_LENGTH__+0x7f4a21>
-}
-  d6:	08 95       	ret
-
-000000d8 <setup>:
 
 void setup() {
 	setupTimer0();
-  d8:	0e 94 5c 00 	call	0xb8	; 0xb8 <setupTimer0>
+  ce:	0e 94 5c 00 	call	0xb8	; 0xb8 <setupTimer0>
 	PORTB.DIR = 0xFF;
-  dc:	8f ef       	ldi	r24, 0xFF	; 255
-  de:	80 93 20 04 	sts	0x0420, r24	; 0x800420 <__TEXT_REGION_LENGTH__+0x7f4420>
-  e2:	08 95       	ret
+  d2:	8f ef       	ldi	r24, 0xFF	; 255
+  d4:	80 93 20 04 	sts	0x0420, r24	; 0x800420 <__TEXT_REGION_LENGTH__+0x7f4420>
+  d8:	08 95       	ret
 
-000000e4 <loop>:
+000000da <loop>:
 }
 
 void loop() {
-	uint16_t current_timer_value = readTimer0();
-  e4:	0e 94 67 00 	call	0xce	; 0xce <readTimer0>
-	        
-	if (current_timer_value % 2 == 0) {
+	if ((TCA0.SINGLE.CNT >> 10) % 2 == 0) {
+  da:	80 91 20 0a 	lds	r24, 0x0A20	; 0x800a20 <__TEXT_REGION_LENGTH__+0x7f4a20>
+  de:	90 91 21 0a 	lds	r25, 0x0A21	; 0x800a21 <__TEXT_REGION_LENGTH__+0x7f4a21>
+  e2:	89 2f       	mov	r24, r25
+  e4:	86 95       	lsr	r24
+  e6:	86 95       	lsr	r24
   e8:	80 fd       	sbrc	r24, 0
-  ea:	04 c0       	rjmp	.+8      	; 0xf4 <loop+0x10>
+  ea:	04 c0       	rjmp	.+8      	; 0xf4 <loop+0x1a>
 		PORTB.OUT = 0xFF;
   ec:	8f ef       	ldi	r24, 0xFF	; 255
   ee:	80 93 24 04 	sts	0x0424, r24	; 0x800424 <__TEXT_REGION_LENGTH__+0x7f4424>
@@ -152,11 +145,11 @@ int main(void)
 {
     /* Replace with your application code */
     setup();
-  fa:	0e 94 6c 00 	call	0xd8	; 0xd8 <setup>
+  fa:	0e 94 67 00 	call	0xce	; 0xce <setup>
 	while (1) 
     {
 		loop();
-  fe:	0e 94 72 00 	call	0xe4	; 0xe4 <loop>
+  fe:	0e 94 6d 00 	call	0xda	; 0xda <loop>
  102:	fd cf       	rjmp	.-6      	; 0xfe <main+0x4>
 
 00000104 <_exit>:
