@@ -1,0 +1,157 @@
+
+interrupt_vector_4809_c.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00802800  00802800  00000176  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000122  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .comment      00000030  00000000  00000000  00000176  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000001a8  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000040  00000000  00000000  000001e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00002a4b  00000000  00000000  00000228  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 000023e1  00000000  00000000  00002c73  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000320  00000000  00000000  00005054  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000074  00000000  00000000  00005374  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00001457  00000000  00000000  000053e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    0000003c  00000000  00000000  0000683f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000030  00000000  00000000  0000687b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__ctors_end>
+   4:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+   8:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+   c:	0c 94 7b 00 	jmp	0xf6	; 0xf6 <__vector_3>
+  10:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  14:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  18:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  1c:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  20:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  24:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  28:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  2c:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  30:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  34:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  38:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  3c:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  40:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  44:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  48:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  4c:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  50:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  54:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  58:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  5c:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  60:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  64:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  68:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  6c:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  70:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  74:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  78:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  7c:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  80:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  84:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  88:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  8c:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  90:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  94:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  98:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+  9c:	0c 94 5a 00 	jmp	0xb4	; 0xb4 <__bad_interrupt>
+
+000000a0 <__ctors_end>:
+  a0:	11 24       	eor	r1, r1
+  a2:	1f be       	out	0x3f, r1	; 63
+  a4:	cf ef       	ldi	r28, 0xFF	; 255
+  a6:	cd bf       	out	0x3d, r28	; 61
+  a8:	df e3       	ldi	r29, 0x3F	; 63
+  aa:	de bf       	out	0x3e, r29	; 62
+  ac:	0e 94 8c 00 	call	0x118	; 0x118 <main>
+  b0:	0c 94 8f 00 	jmp	0x11e	; 0x11e <_exit>
+
+000000b4 <__bad_interrupt>:
+  b4:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000b8 <rtc_setup>:
+	RTC.INTFLAGS = RTC_OVF_bm;
+	PORTB.OUTTGL = PIN0_bm;
+}
+
+
+void loop() {
+  b8:	e0 e4       	ldi	r30, 0x40	; 64
+  ba:	f1 e0       	ldi	r31, 0x01	; 1
+  bc:	80 81       	ld	r24, Z
+  be:	81 68       	ori	r24, 0x81	; 129
+  c0:	80 83       	st	Z, r24
+  c2:	82 81       	ldd	r24, Z+2	; 0x02
+  c4:	81 60       	ori	r24, 0x01	; 1
+  c6:	82 83       	std	Z+2, r24	; 0x02
+  c8:	87 81       	ldd	r24, Z+7	; 0x07
+  ca:	87 83       	std	Z+7, r24	; 0x07
+  cc:	8f ef       	ldi	r24, 0xFF	; 255
+  ce:	82 87       	std	Z+10, r24	; 0x0a
+  d0:	8f e0       	ldi	r24, 0x0F	; 15
+  d2:	83 87       	std	Z+11, r24	; 0x0b
+  d4:	80 91 41 01 	lds	r24, 0x0141	; 0x800141 <__TEXT_REGION_LENGTH__+0x7f4141>
+  d8:	80 fd       	sbrc	r24, 0
+  da:	fc cf       	rjmp	.-8      	; 0xd4 <rtc_setup+0x1c>
+  dc:	08 95       	ret
+
+000000de <setup>:
+  de:	0e 94 5c 00 	call	0xb8	; 0xb8 <rtc_setup>
+  e2:	86 e0       	ldi	r24, 0x06	; 6
+  e4:	80 93 13 01 	sts	0x0113, r24	; 0x800113 <__TEXT_REGION_LENGTH__+0x7f4113>
+  e8:	78 94       	sei
+  ea:	e0 e2       	ldi	r30, 0x20	; 32
+  ec:	f4 e0       	ldi	r31, 0x04	; 4
+  ee:	80 81       	ld	r24, Z
+  f0:	81 60       	ori	r24, 0x01	; 1
+  f2:	80 83       	st	Z, r24
+  f4:	08 95       	ret
+
+000000f6 <__vector_3>:
+  f6:	1f 92       	push	r1
+  f8:	0f 92       	push	r0
+  fa:	0f b6       	in	r0, 0x3f	; 63
+  fc:	0f 92       	push	r0
+  fe:	11 24       	eor	r1, r1
+ 100:	8f 93       	push	r24
+ 102:	81 e0       	ldi	r24, 0x01	; 1
+ 104:	80 93 43 01 	sts	0x0143, r24	; 0x800143 <__TEXT_REGION_LENGTH__+0x7f4143>
+ 108:	80 93 27 04 	sts	0x0427, r24	; 0x800427 <__TEXT_REGION_LENGTH__+0x7f4427>
+ 10c:	8f 91       	pop	r24
+ 10e:	0f 90       	pop	r0
+ 110:	0f be       	out	0x3f, r0	; 63
+ 112:	0f 90       	pop	r0
+ 114:	1f 90       	pop	r1
+ 116:	18 95       	reti
+
+00000118 <main>:
+
+}
+
+int main(void)
+{
+	setup();
+ 118:	0e 94 6f 00 	call	0xde	; 0xde <setup>
+ 11c:	ff cf       	rjmp	.-2      	; 0x11c <main+0x4>
+
+0000011e <_exit>:
+ 11e:	f8 94       	cli
+
+00000120 <__stop_program>:
+ 120:	ff cf       	rjmp	.-2      	; 0x120 <__stop_program>
