@@ -1,18 +1,18 @@
 <ASSEMBLER_INFO>
  <VERSION>2.2.8</VERSION>
  <DEVICE>"ATmega4809"</DEVICE>
- <WORKING_DIR>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\Debug</WORKING_DIR>
+ <WORKING_DIR>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\Debug</WORKING_DIR>
  <INCLUDE_PATH>
-  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
-  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR>E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>E:\Sovellukset\MicrochipStudio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</SOURCE_FILE>
+ <SOURCE_FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</SOURCE_FILE>
  <INCLUDED_FILES>
-  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc</FILE>
+  <FILE>E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\Debug\harjoitustyo_rgb_led_asm.obj</FILE>
+  <FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\Debug\harjoitustyo_rgb_led_asm.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
   <FILE>harjoitustyo_rgb_led_asm.hex</FILE>
@@ -22,8 +22,16 @@
   <FILE>harjoitustyo_rgb_led_asm.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>40</LINE></init>
-  <adc_read><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>51</LINE></adc_read>
-  <wait_for_conversion><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>56</LINE></wait_for_conversion>
+  <start><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>103</LINE></start>
+  <init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>214</LINE></init>
+  <adc_read><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>114</LINE></adc_read>
+  <wait_for_conversion><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>120</LINE></wait_for_conversion>
+  <calculate_brightness><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>135</LINE></calculate_brightness>
+  <get_pot_vals><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>147</LINE></get_pot_vals>
+  <drive_leds_pwm><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>174</LINE></drive_leds_pwm>
+  <loop><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>306</LINE></loop>
+  <mode_manual><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>295</LINE></mode_manual>
+  <mode_breath><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>300</LINE></mode_breath>
+  <mode_rainbow><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>303</LINE></mode_rainbow>
  </LABELS>
 </ASSEMBLER_INFO>
