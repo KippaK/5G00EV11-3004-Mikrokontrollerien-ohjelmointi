@@ -5,6 +5,8 @@
 ; Author : antti
 ;
 
+.INCLUDE "m4809def.inc"
+
 ; ADC0 configuration
 ; ADC0_CTRLC configuration
 .equ ADC_SAMPCAP = 0b1
@@ -20,26 +22,26 @@
 ; TCA0 configuration
 ; TCA0_CTRLA configuration
 .equ TCA_SINGLE_CLKSEL_DIV = TCA_SINGLE_CLKSEL_DIV64_gc
-.equ TCA0_CMPxEN = (TCA_SINGLE_CPM0EN_bm | TCA_SINGLE_CPM1EN_bm | TCA_SINGLE_CPM2EN_bm)
+.equ TCA0_CMPxEN = (TCA_SINGLE_CMP0EN_bm | TCA_SINGLE_CMP1EN_bm | TCA_SINGLE_CMP2EN_bm)
 .equ TCA0_CTRLA_CONF = (TCA_SINGLE_CLKSEL_DIV | TCA_SINGLE_ENABLE_bm)
-.equ TCA0_CTRLB_CONF = (TCA0_CMPxEN | TCA_SINGLE_WGMODE_SINGLESLOPE_gc=
+.equ TCA0_CTRLB_CONF = (TCA0_CMPxEN | TCA_SINGLE_WGMODE_SINGLESLOPE_gc)
 
 ; Ports
 ; LEDS
 .equ LED_R_reg = PORTB_base
-.equ LED_R_bp = 0x05
+.equ LED_R_bp = 0x00
 .equ LED_R_bm = (1 << LED_R_bp)
 .equ LED_R_DIR = LED_R_reg + PORT_DIR_offset
 .equ LED_R_OUT = LED_R_reg + PORT_OUT_offset
 
 .equ LED_G_reg = PORTB_base
-.equ LED_G_bp = 0x02
+.equ LED_G_bp = 0x01
 .equ LED_G_bm = (1 << LED_G_bp)
 .equ LED_G_DIR = LED_G_reg + PORT_DIR_offset
 .equ LED_G_OUT = LED_G_reg + PORT_OUT_offset
 
-.equ LED_B_reg = PORTF_base
-.equ LED_B_bp = 0x04
+.equ LED_B_reg = PORTB_base
+.equ LED_B_bp = 0x02
 .equ LED_B_bm = (1 << LED_B_bp)
 .equ LED_B_DIR = LED_B_reg + PORT_DIR_offset
 .equ LED_B_OUT = LED_B_reg + PORT_OUT_offset
@@ -88,21 +90,26 @@
 .equ ADC_STCONV = 0b1
 
 ; TCA0_CMPBUF
-.equ TCA0_SINGLE_CMP0BUFL = TCA0_SINGLE_CMP0BUF
-.equ TCA0_SINGLE_CMP0BUFH = TCA0_SINGLE_CMP0BUFL + 0x01
-.equ TCA0_SINGLE_CMP1BUFL = TCA0_SINGLE_CMP1BUF
-.equ TCA0_SINGLE_CMP1BUFH = TCA0_SINGLE_CMP1BUFL
-.equ TCA0_SINGLE_CMP2BUFL = TCA0_SINGLE_CMP2BUF
-.equ TCA0_SINGLE_CMP2BUFH = TCA0_SINGLE_CMP2BUFL + 0x01
+.equ TCA0_SINGLE_CMP0L = TCA0_SINGLE_CMP0
+.equ TCA0_SINGLE_CMP0H = TCA0_SINGLE_CMP0L + 0x01
+.equ TCA0_SINGLE_CMP1L = TCA0_SINGLE_CMP1
+.equ TCA0_SINGLE_CMP1H = TCA0_SINGLE_CMP1L
+.equ TCA0_SINGLE_CMP2L = TCA0_SINGLE_CMP2
+.equ TCA0_SINGLE_CMP2H = TCA0_SINGLE_CMP2L + 0x01
 
-.equ TCA0_SINGLE_PERBUFL = TCA0_SINGLE_PERBUF
-.equ TCA0_SINGLE_PERBUFH = (TCA0_SINGLE_PERBUFL + 0x01)
+.equ TCA0_SINGLE_PERL = TCA0_SINGLE_PER
+.equ TCA0_SINGLE_PERH = (TCA0_SINGLE_PERL + 0x01)
+
+.equ PORTMUX_TCA0_reg = PORTMUX_TCA0_PORTB_gc
 
 
 ; LED duty cycle registers
-.equ LED_R_dc_reg = TCA0_SINGLE_CMP0BUFL
-.equ LED_G_dc_reg = TCA0_SINGLE_CMP1BUFL
-.equ LED_B_dc_reg = TCA0_SINGLE_CMP2BUFL
+.equ LED_R_dc_L = TCA0_SINGLE_CMP0L
+.equ LED_R_dc_H = (LED_R_dc_L + 1)
+.equ LED_G_dc_L = TCA0_SINGLE_CMP1L
+.equ LED_G_dc_H = (LED_G_dc_L + 1)
+.equ LED_B_dc_L = TCA0_SINGLE_CMP2L
+.equ LED_B_dc_H = (LED_B_dc_L + 1)
 
 
 
@@ -241,9 +248,14 @@ drive_leds_pwm:
 	rcall calculate_brightness
 	mov r19, r24
 
-	sts LED_R_dc_reg, r17
-	sts LED_G_dc_reg, r18
-	sts LED_B_dc_reg, r19
+	ldi r24, 0x00
+	sts LED_R_dc_L, r17
+	sts LED_R_dc_H, r24
+	sts LED_G_dc_L, r18
+	sts LED_G_dc_H, r24
+	sts LED_B_dc_L, r19
+	sts LED_B_dc_H, r24
+
 
 	; Pop work registers from stack
 	pop r19
@@ -318,18 +330,18 @@ port_init:
 
 tca0_init:
 	; Configure PORTMUX to route TCA outputs to PORTB
-	ldi r16, PORTMUX_TCA0_PORTB_gc
+	ldi r16, PORTMUX_TCA0_reg
 	sts PORTMUX_TCAROUTEA, r16
 	; Set the PWM period (frequency)
 	ldi r16, 0xFF
-	sts TCA0_SINGLE_PERBUFL, r16
+	sts TCA0_SINGLE_PERL, r16
 	ldi r16, 0x00
-	sts TCA0_SINGLE_PERBUFH, r16
+	sts TCA0_SINGLE_PERH, r16
 	; Set TCA0_CTRLA confifuration
 	ldi r16, TCA0_CTRLA_CONF
 	sts TCA0_SINGLE_CTRLA, r16
 	ldi r16, TCA0_CTRLB_CONF
-	sts TCA0_SINGLE_CTRLB
+	sts TCA0_SINGLE_CTRLB, r16
 	ret
 
 init:
@@ -345,13 +357,15 @@ init:
 mode_manual:
 	rcall get_pot_vals
 	rcall drive_leds_pwm
-	ret
+	rjmp loop
 
 mode_breath:
-	ret
+	; WIP
+	rjmp loop
 
 mode_rainbow:
-	ret
+	; WIP
+	rjmp loop
 
 loop:
 	mov r16, r31

@@ -1,8 +1,10 @@
 
-AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Sun Dec 08 07:38:57 2024
+AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Sun Dec 08 11:14:17 2024
 
-[builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
-[builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
+[builtin](2): Including file 'E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
+E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm(8): Including file 'E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
+[builtin](2): Including file 'E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
+E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm(8): Including file 'E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
                                  
                                  ;
                                  
@@ -4519,6 +4521,37 @@ AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitust
                                  ; Author : antti
                                  ;
                                  
+                                 .INCLUDE "m4809def.inc"
+                                 
+                                 
+                                 ;*************************************************************************
+                                 ;* A P P L I C A T I O N   N O T E   F O R   T H E   A V R   F A M I L Y
+                                 ;*
+                                 ;* Number            : AVR000
+                                 ;* File Name         : m4809def.inc
+                                 ;* Title             : Register/Bit Definitions for the ATmega4809
+                                 ;* Created           : 2021-07-13 10:39
+                                 ;* Version           : 1.00
+                                 ;* Support e-mail    : avr@atmel.com
+                                 ;* Target MCU        : ATmega4809
+                                 ;*
+                                 ;* DESCRIPTION
+                                 ;* When including this file in the assembly program file, all I/O register
+                                 ;* names and I/O register bit names appearing in the data book can be used.
+                                 ;* In addition, the six registers forming the three data pointers X, Y and
+                                 ;* Z have been assigned names XL - ZH. Highest RAM address for Internal
+                                 ;* SRAM is also defined
+                                 ;*
+                                 ;*************************************************************************
+                                 
+                                 #ifndef _M4809DEF_INC_
+                                 #endif /* _M4809DEF_INC_ */
+                                 
+                                 ; ***** END OF FILE ******************************************************
+                                 
+                                 
+                                 
+                                 
                                  ; ADC0 configuration
                                  ; ADC0_CTRLC configuration
                                  .equ ADC_SAMPCAP = 0b1
@@ -4534,25 +4567,26 @@ AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitust
                                  ; TCA0 configuration
                                  ; TCA0_CTRLA configuration
                                  .equ TCA_SINGLE_CLKSEL_DIV = TCA_SINGLE_CLKSEL_DIV64_gc
+                                 .equ TCA0_CMPxEN = (TCA_SINGLE_CMP0EN_bm | TCA_SINGLE_CMP1EN_bm | TCA_SINGLE_CMP2EN_bm)
                                  .equ TCA0_CTRLA_CONF = (TCA_SINGLE_CLKSEL_DIV | TCA_SINGLE_ENABLE_bm)
-                                 
+                                 .equ TCA0_CTRLB_CONF = (TCA0_CMPxEN | TCA_SINGLE_WGMODE_SINGLESLOPE_gc)
                                  
                                  ; Ports
                                  ; LEDS
                                  .equ LED_R_reg = PORTB_base
-                                 .equ LED_R_bp = 0x05
+                                 .equ LED_R_bp = 0x00
                                  .equ LED_R_bm = (1 << LED_R_bp)
                                  .equ LED_R_DIR = LED_R_reg + PORT_DIR_offset
                                  .equ LED_R_OUT = LED_R_reg + PORT_OUT_offset
                                  
                                  .equ LED_G_reg = PORTB_base
-                                 .equ LED_G_bp = 0x02
+                                 .equ LED_G_bp = 0x01
                                  .equ LED_G_bm = (1 << LED_G_bp)
                                  .equ LED_G_DIR = LED_G_reg + PORT_DIR_offset
                                  .equ LED_G_OUT = LED_G_reg + PORT_OUT_offset
                                  
-                                 .equ LED_B_reg = PORTF_base
-                                 .equ LED_B_bp = 0x04
+                                 .equ LED_B_reg = PORTB_base
+                                 .equ LED_B_bp = 0x02
                                  .equ LED_B_bm = (1 << LED_B_bp)
                                  .equ LED_B_DIR = LED_B_reg + PORT_DIR_offset
                                  .equ LED_B_OUT = LED_B_reg + PORT_OUT_offset
@@ -4601,20 +4635,27 @@ AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitust
                                  .equ ADC_STCONV = 0b1
                                  
                                  ; TCA0_CMPBUF
-                                 .equ TCA0_SINGLE_CMP0BUFL = TCA0_SINGLE_CMP0BUF
-                                 .equ TCA0_SINGLE_CMP0BUFH = TCA0_SINGLE_CMP0BUFL + 0x01
-                                 .equ TCA0_SINGLE_CMP1BUFL = TCA0_SINGLE_CMP1BUF
-                                 .equ TCA0_SINGLE_CMP1BUFH = TCA0_SINGLE_CMP1BUFL
-                                 .equ TCA0_SINGLE_CMP2BUFL = TCA0_SINGLE_CMP2BUF
-                                 .equ TCA0_SINGLE_CMP2BUFH = TCA0_SINGLE_CMP2BUFL + 0x01
+                                 .equ TCA0_SINGLE_CMP0L = TCA0_SINGLE_CMP0
+                                 .equ TCA0_SINGLE_CMP0H = TCA0_SINGLE_CMP0L + 0x01
+                                 .equ TCA0_SINGLE_CMP1L = TCA0_SINGLE_CMP1
+                                 .equ TCA0_SINGLE_CMP1H = TCA0_SINGLE_CMP1L
+                                 .equ TCA0_SINGLE_CMP2L = TCA0_SINGLE_CMP2
+                                 .equ TCA0_SINGLE_CMP2H = TCA0_SINGLE_CMP2L + 0x01
+                                 
+                                 .equ TCA0_SINGLE_PERL = TCA0_SINGLE_PER
+                                 .equ TCA0_SINGLE_PERH = (TCA0_SINGLE_PERL + 0x01)
+                                 
+                                 .equ PORTMUX_TCA0_reg = PORTMUX_TCA0_PORTB_gc
+                                 
                                  
                                  ; LED duty cycle registers
-                                 .equ LED_R_dc_reg = TCA0_SINGLE_CMP0BUFL
-                                 .equ LED_G_dc_reg = TCA0_SINGLE_CMP1BUFL
-                                 .equ LED_B_dc_reg = TCA0_SINGLE_CMP2BUFL
+                                 .equ LED_R_dc_L = TCA0_SINGLE_CMP0L
+                                 .equ LED_R_dc_H = (LED_R_dc_L + 1)
+                                 .equ LED_G_dc_L = TCA0_SINGLE_CMP1L
+                                 .equ LED_G_dc_H = (LED_G_dc_L + 1)
+                                 .equ LED_B_dc_L = TCA0_SINGLE_CMP2L
+                                 .equ LED_B_dc_H = (LED_B_dc_L + 1)
                                  
-                                 .equ TCA0_SINGLE_PERBUFL = TCA0_SINGLE_PERBUF
-                                 .equ TCA0_SINGLE_PERBUFH = (TCA0_SINGLE_PERBUFL + 0x01)
                                  
                                  
                                  start:
@@ -4623,7 +4664,7 @@ AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitust
 000001 bf0e                      	out CPU_SPH, r16
 000002 ef0f                      	ldi r16, low(0x17FF)
 000003 bf0d                      	out CPU_SPL, r16
-000004 c0b1                      	rjmp init
+000004 c0bb                      	rjmp init
                                  
                                  
                                  ; When calling adc_read, have r24 set as the ADC input pin Selection Bit
@@ -4752,125 +4793,134 @@ AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitust
 000058 dfbc                      	rcall calculate_brightness
 000059 2f38                      	mov r19, r24
                                  
-00005a 9310 0a38                 	sts LED_R_dc_reg, r17
-00005c 9320 0a3a                 	sts LED_G_dc_reg, r18
-00005e 9330 0a3c                 	sts LED_B_dc_reg, r19
+00005a e080                      	ldi r24, 0x00
+00005b 9310 0a28                 	sts LED_R_dc_L, r17
+00005d 9380 0a29                 	sts LED_R_dc_H, r24
+00005f 9320 0a2a                 	sts LED_G_dc_L, r18
+000061 9380 0a2b                 	sts LED_G_dc_H, r24
+000063 9330 0a2c                 	sts LED_B_dc_L, r19
+000065 9380 0a2d                 	sts LED_B_dc_H, r24
+                                 
                                  
                                  	; Pop work registers from stack
-000060 913f                      	pop r19
-000061 912f                      	pop r18
-000062 911f                      	pop r17
-000063 910f                      	pop r16
-000064 9508                      	ret
+000067 913f                      	pop r19
+000068 912f                      	pop r18
+000069 911f                      	pop r17
+00006a 910f                      	pop r16
+00006b 9508                      	ret
                                  
                                  adc_init:
-000065 e101                      	ldi r16, ADC_CTRLC_CONF
-000066 9300 0602                 	sts ADC0_CTRLC, r16
-000068 e005                      	ldi r16, ADC_CTRLA_CONF
-000069 9300 0600                 	sts ADC0_CTRLA, r16
-00006b 9508                      	ret
+00006c e101                      	ldi r16, ADC_CTRLC_CONF
+00006d 9300 0602                 	sts ADC0_CTRLC, r16
+00006f e005                      	ldi r16, ADC_CTRLA_CONF
+000070 9300 0600                 	sts ADC0_CTRLA, r16
+000072 9508                      	ret
                                  
                                  port_init:
                                  	; Button pin I/O directions
-00006c 9100 0400                 	lds r16, BTN_POW_DIR
-00006e e012                      	ldi r17, BTN_POW_bm
-00006f 9510                      	com r17
-000070 2301                      	and r16, r17
-000071 9300 0400                 	sts BTN_POW_DIR, r16
-                                 
-000073 9100 0480                 	lds r16, BTN_MOD_DIR
-000075 e018                      	ldi r17, BTN_MOD_bm
+000073 9100 0400                 	lds r16, BTN_POW_DIR
+000075 e012                      	ldi r17, BTN_POW_bm
 000076 9510                      	com r17
 000077 2301                      	and r16, r17
-000078 9300 0480                 	sts BTN_MOD_DIR, r16
+000078 9300 0400                 	sts BTN_POW_DIR, r16
                                  
-                                 
-                                 	; LED pin I/O directions
-00007a 9100 0460                 	lds r16, POT_T_DIR
-00007c e018                      	ldi r17, POT_T_bm
+00007a 9100 0480                 	lds r16, BTN_MOD_DIR
+00007c e018                      	ldi r17, BTN_MOD_bm
 00007d 9510                      	com r17
 00007e 2301                      	and r16, r17
-00007f 9300 0460                 	sts POT_T_DIR, r16
+00007f 9300 0480                 	sts BTN_MOD_DIR, r16
                                  
-000081 9100 0460                 	lds r16, POT_R_DIR
-000083 e014                      	ldi r17, POT_R_bm
-000084 9510                      	com r17
-000085 2301                      	and r16, r17
-000086 9300 0460                 	sts POT_R_DIR, r16
-                                 
-000088 9100 0460                 	lds r16, POT_G_DIR
-00008a e012                      	ldi r17, POT_G_bm
-00008b 9510                      	com r17
-00008c 2301                      	and r16, r17
-00008d 9300 0460                 	sts POT_G_DIR, r16
-                                 
-00008f 9100 0460                 	lds r16, POT_B_DIR
-000091 e011                      	ldi r17, POT_B_bm
-000092 9510                      	com r17
-000093 2301                      	and r16, r17
-000094 9300 0460                 	sts POT_B_DIR, r16
                                  
                                  	; LED pin I/O directions
-000096 9100 0420                 	lds r16, LED_R_DIR
-000098 e210                      	ldi r17, LED_R_bm
-000099 2b01                      	or r16, r17
-00009a 9300 0420                 	sts LED_R_DIR, r16
+000081 9100 0460                 	lds r16, POT_T_DIR
+000083 e018                      	ldi r17, POT_T_bm
+000084 9510                      	com r17
+000085 2301                      	and r16, r17
+000086 9300 0460                 	sts POT_T_DIR, r16
                                  
-00009c 9100 0420                 	lds r16, LED_G_DIR
-00009e e014                      	ldi r17, LED_G_bm
-00009f 2b01                      	or r16, r17
-0000a0 9300 0420                 	sts LED_G_DIR, r16
+000088 9100 0460                 	lds r16, POT_R_DIR
+00008a e014                      	ldi r17, POT_R_bm
+00008b 9510                      	com r17
+00008c 2301                      	and r16, r17
+00008d 9300 0460                 	sts POT_R_DIR, r16
                                  
-0000a2 9100 04a0                 	lds r16, LED_B_DIR
-0000a4 e110                      	ldi r17, LED_B_bm
-0000a5 2b01                      	or r16, r17
-0000a6 9300 04a0                 	sts LED_B_DIR, r16
-0000a8 9508                      	ret
+00008f 9100 0460                 	lds r16, POT_G_DIR
+000091 e012                      	ldi r17, POT_G_bm
+000092 9510                      	com r17
+000093 2301                      	and r16, r17
+000094 9300 0460                 	sts POT_G_DIR, r16
+                                 
+000096 9100 0460                 	lds r16, POT_B_DIR
+000098 e011                      	ldi r17, POT_B_bm
+000099 9510                      	com r17
+00009a 2301                      	and r16, r17
+00009b 9300 0460                 	sts POT_B_DIR, r16
+                                 
+                                 	; LED pin I/O directions
+00009d 9100 0420                 	lds r16, LED_R_DIR
+00009f e011                      	ldi r17, LED_R_bm
+0000a0 2b01                      	or r16, r17
+0000a1 9300 0420                 	sts LED_R_DIR, r16
+                                 
+0000a3 9100 0420                 	lds r16, LED_G_DIR
+0000a5 e012                      	ldi r17, LED_G_bm
+0000a6 2b01                      	or r16, r17
+0000a7 9300 0420                 	sts LED_G_DIR, r16
+                                 
+0000a9 9100 0420                 	lds r16, LED_B_DIR
+0000ab e014                      	ldi r17, LED_B_bm
+0000ac 2b01                      	or r16, r17
+0000ad 9300 0420                 	sts LED_B_DIR, r16
+0000af 9508                      	ret
                                  
                                  tca0_init:
                                  	; Configure PORTMUX to route TCA outputs to PORTB
-0000a9 e001                      	ldi r16, PORTMUX_TCA0_PORTB_gc
-0000aa 9300 05e4                 	sts PORTMUX_TCAROUTEA, r16
+0000b0 e001                      	ldi r16, PORTMUX_TCA0_reg
+0000b1 9300 05e4                 	sts PORTMUX_TCAROUTEA, r16
                                  	; Set the PWM period (frequency)
-0000ac ef0f                      	ldi r16, 0xFF
-0000ad 9300 0a36                 	sts TCA0_SINGLE_PERBUFL, r16
-0000af e000                      	ldi r16, 0x00
-0000b0 9300 0a37                 	sts TCA0_SINGLE_PERBUFH, r16
+0000b3 ef0f                      	ldi r16, 0xFF
+0000b4 9300 0a26                 	sts TCA0_SINGLE_PERL, r16
+0000b6 e000                      	ldi r16, 0x00
+0000b7 9300 0a27                 	sts TCA0_SINGLE_PERH, r16
                                  	; Set TCA0_CTRLA confifuration
-0000b2 e00b                      	ldi r16, TCA0_CTRLA_CONF
-0000b3 9300 0a00                 	sts TCA0_SINGLE_CTRLA, r16	
-0000b5 9508                      	ret
+0000b9 e00b                      	ldi r16, TCA0_CTRLA_CONF
+0000ba 9300 0a00                 	sts TCA0_SINGLE_CTRLA, r16
+0000bc e703                      	ldi r16, TCA0_CTRLB_CONF
+0000bd 9300 0a01                 	sts TCA0_SINGLE_CTRLB, r16
+0000bf 9508                      	ret
                                  
                                  init:
-0000b6 dfae                      	rcall adc_init
-0000b7 dfb4                      	rcall port_init
-0000b8 dff0                      	rcall tca0_init
+0000c0 dfab                      	rcall adc_init
+0000c1 dfb1                      	rcall port_init
+0000c2 dfed                      	rcall tca0_init
                                  ; Initial values
-0000b9 e0f0                      	ldi r31, 0x00 ; RGB LED mode value
+0000c3 e0f0                      	ldi r31, 0x00 ; RGB LED mode value
                                  
-0000ba c005                      	rjmp loop
+0000c4 c005                      	rjmp loop
                                  
                                  
                                  mode_manual:
-0000bb df81                      	rcall get_pot_vals
-0000bc df89                      	rcall drive_leds_pwm
-0000bd 9508                      	ret
+0000c5 df77                      	rcall get_pot_vals
+0000c6 df7f                      	rcall drive_leds_pwm
+0000c7 c002                      	rjmp loop
                                  
                                  mode_breath:
-0000be 9508                      	ret
+                                 	; WIP
+0000c8 c001                      	rjmp loop
                                  
                                  mode_rainbow:
-0000bf 9508                      	ret
+                                 	; WIP
+0000c9 c000                      	rjmp loop
                                  
                                  loop:
-0000c0 2f0f                      	mov r16, r31
-0000c1 7003                      	andi r16, 0x03
-0000c2 3000                      	cpi r16, 0x00
-0000c3 f3b9                      	breq mode_manual
-0000c4 3001                      	cpi r16, 0x01
-0000c5 f3c1                      	breq mode_breath
-0000c6 3002                      	cpi r16, 0x02
-0000c7 f3b9                      	breq mode_rainbow
+0000ca 2f0f                      	mov r16, r31
+0000cb 7003                      	andi r16, 0x03
+0000cc 3000                      	cpi r16, 0x00
+0000cd f3b9                      	breq mode_manual
+0000ce 3001                      	cpi r16, 0x01
+0000cf f3c1                      	breq mode_breath
+0000d0 3002                      	cpi r16, 0x02
+0000d1 f3b9                      	breq mode_rainbow
                                  
                                  
 
@@ -4892,8 +4942,8 @@ counted separately from r26..r31 here.
 "ATmega4809" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   4 r1 :   5 r2 :   2 r3 :   2 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  78 r17:  30 r18:   6 r19:   6 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:  13 r25:   6 r26:   0 r27:   0 r28:   0 
+r13:   0 r14:   0 r15:   0 r16:  80 r17:  30 r18:   6 r19:   6 r20:   0 
+r21:   0 r22:   0 r23:   0 r24:  17 r25:   6 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   2 
 Registers used: 11 out of 35 (31.4%)
 
@@ -4908,21 +4958,21 @@ clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   2 cls   :   0
 clt   :   0 clv   :   0 clz   :   0 com   :   6 cp    :   0 cpc   :   0 
 cpi   :   3 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :  24 lds   :  11 lpm   :   0 lsl   :   0 
+ld    :   0 ldd   :   0 ldi   :  26 lds   :  11 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :  19 movw  :   0 mul   :   1 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   0 or    :   3 ori   :   0 out   :   2 pop   :  11 
-push  :  11 rcall :  19 ret   :  15 reti  :   0 rjmp  :   4 rol   :   0 
+push  :  11 rcall :  19 ret   :  12 reti  :   0 rjmp  :   7 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   1 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 st    :   0 std   :   0 sts   :  24 sub   :   0 
+sez   :   0 sleep :   0 st    :   0 std   :   0 sts   :  28 sub   :   0 
 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 Instructions used: 19 out of 112 (17.0%)
 
 "ATmega4809" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000192    402      0    402   49152   0.8%
+[.cseg] 0x000000 0x0001a6    422      0    422   49152   0.9%
 [.dseg] 0x002800 0x002800      0      0      0    6144   0.0%
 [.eseg] 0x000000 0x000000      0      0      0     256   0.0%
 
