@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Wed Dec 04 08:31:37 2024
+AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Sun Dec 08 07:38:57 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -3074,23 +3074,33 @@ EQU  POT_B_DIR    00000460
 EQU  POT_B_bm     00000001
 EQU  POT_B_mc     00000000
 EQU  ADC_STCONV   00000001
-EQU  TCA0_SINGLE_CMP0H 00000a28
-EQU  TCA0_SINGLE_CMP0L 00000a29
-EQU  TCA0_SINGLE_CMP1H 00000a2a
-EQU  TCA0_SINGLE_CMP1L 00000a28
-EQU  TCA0_SINGLE_CMP2H 00000a2c
-EQU  TCA0_SINGLE_CMP2L 00000a2d
-EQU  LED_R_dc_reg 00000a29
-EQU  LED_G_dc_reg 00000a28
-EQU  LED_B_dc_reg 00000a2d
+EQU  TCA0_SINGLE_CMP0BUFL 00000a38
+EQU  TCA0_SINGLE_CMP0BUFH 00000a39
+EQU  TCA0_SINGLE_CMP1BUFL 00000a3a
+EQU  TCA0_SINGLE_CMP1BUFH 00000a3a
+EQU  TCA0_SINGLE_CMP2BUFL 00000a3c
+EQU  TCA0_SINGLE_CMP2BUFH 00000a3d
+EQU  LED_R_dc_reg 00000a38
+EQU  LED_G_dc_reg 00000a3a
+EQU  LED_B_dc_reg 00000a3c
+EQU  TCA0_SINGLE_PERBUFL 00000a36
+EQU  TCA0_SINGLE_PERBUFH 00000a37
 CSEG start        00000000
-CSEG init         00000052
+CSEG init         000000b6
 CSEG adc_read     00000005
 CSEG wait_for_conversion 00000009
 CSEG calculate_brightness 00000015
-CSEG get_pot_vals 0000001d
-CSEG drive_leds_pwm 00000033
-CSEG loop         000000a4
-CSEG mode_manual  0000009f
-CSEG mode_breath  000000a2
-CSEG mode_rainbow 000000a3
+CSEG get_pot_t_val 0000001d
+CSEG get_pot_r_val 00000025
+CSEG get_pot_g_val 0000002d
+CSEG get_pot_b_val 00000035
+CSEG get_pot_vals 0000003d
+CSEG get_rgb_vals 00000042
+CSEG drive_leds_pwm 00000046
+CSEG adc_init     00000065
+CSEG port_init    0000006c
+CSEG tca0_init    000000a9
+CSEG loop         000000c0
+CSEG mode_manual  000000bb
+CSEG mode_breath  000000be
+CSEG mode_rainbow 000000bf

@@ -20,8 +20,9 @@
 ; TCA0 configuration
 ; TCA0_CTRLA configuration
 .equ TCA_SINGLE_CLKSEL_DIV = TCA_SINGLE_CLKSEL_DIV64_gc
+.equ TCA0_CMPxEN = (TCA_SINGLE_CPM0EN_bm | TCA_SINGLE_CPM1EN_bm | TCA_SINGLE_CPM2EN_bm)
 .equ TCA0_CTRLA_CONF = (TCA_SINGLE_CLKSEL_DIV | TCA_SINGLE_ENABLE_bm)
-
+.equ TCA0_CTRLB_CONF = (TCA0_CMPxEN | TCA_SINGLE_WGMODE_SINGLESLOPE_gc=
 
 ; Ports
 ; LEDS
@@ -86,18 +87,23 @@
 ; ADC0_COMMAND
 .equ ADC_STCONV = 0b1
 
-; TCA0_CMP
-.equ TCA0_SINGLE_CMP0H = TCA0_SINGLE_CMP0
-.equ TCA0_SINGLE_CMP0L = TCA0_SINGLE_CMP0H + 0x01
-.equ TCA0_SINGLE_CMP1H = TCA0_SINGLE_CMP1
-.equ TCA0_SINGLE_CMP1L = TCA0_SINGLE_CMP0H
-.equ TCA0_SINGLE_CMP2H = TCA0_SINGLE_CMP2
-.equ TCA0_SINGLE_CMP2L = TCA0_SINGLE_CMP2H + 0x01
+; TCA0_CMPBUF
+.equ TCA0_SINGLE_CMP0BUFL = TCA0_SINGLE_CMP0BUF
+.equ TCA0_SINGLE_CMP0BUFH = TCA0_SINGLE_CMP0BUFL + 0x01
+.equ TCA0_SINGLE_CMP1BUFL = TCA0_SINGLE_CMP1BUF
+.equ TCA0_SINGLE_CMP1BUFH = TCA0_SINGLE_CMP1BUFL
+.equ TCA0_SINGLE_CMP2BUFL = TCA0_SINGLE_CMP2BUF
+.equ TCA0_SINGLE_CMP2BUFH = TCA0_SINGLE_CMP2BUFL + 0x01
+
+.equ TCA0_SINGLE_PERBUFL = TCA0_SINGLE_PERBUF
+.equ TCA0_SINGLE_PERBUFH = (TCA0_SINGLE_PERBUFL + 0x01)
+
 
 ; LED duty cycle registers
-.equ LED_R_dc_reg = TCA0_SINGLE_CMP0L
-.equ LED_G_dc_reg = TCA0_SINGLE_CMP1L
-.equ LED_B_dc_reg = TCA0_SINGLE_CMP2L
+.equ LED_R_dc_reg = TCA0_SINGLE_CMP0BUFL
+.equ LED_G_dc_reg = TCA0_SINGLE_CMP1BUFL
+.equ LED_B_dc_reg = TCA0_SINGLE_CMP2BUFL
+
 
 
 start:
@@ -142,35 +148,70 @@ calculate_brightness:
 	pop r0
 	ret
 
-; Gets all potentiometer values and stores them into
-; r24 (Total), r25 (R), r26 (G) and r27 (B)
-get_pot_vals:
+; Reads Total potentiometer val and stores it into r0
+get_pot_t_val:
 	push r16
-
-	ldi r16, POT_R_mc
-	sts ADC0_MUXPOS, r16
-	rcall adc_read
-	mov r24, r16
-
-	ldi r16, POT_G_mc
-	sts ADC0_MUXPOS, r16
-	rcall adc_read
-	mov r24, r16
-
-	ldi r16, POT_B_mc
-	sts ADC0_MUXPOS, r16
-	rcall adc_read
-	mov r24, r16
-
 	ldi r16, POT_T_mc
 	sts ADC0_MUXPOS, r16
 	rcall adc_read
-	mov r24, r16
-
+	mov r0, r24
 	pop r16
+	ret
 
 
-; Gets values from r24 (Total), r25 (R), r26 (G) and r27 (B)
+; Reads Total potentiometer val and stores it into r0
+get_pot_r_val:
+	push r16
+	ldi r16, POT_R_mc
+	sts ADC0_MUXPOS, r16
+	rcall adc_read
+	mov r1, r24
+	pop r16
+	ret
+
+
+; Reads Total potentiometer val and stores it into r0
+get_pot_g_val:
+	push r16
+	ldi r16, POT_G_mc
+	sts ADC0_MUXPOS, r16
+	rcall adc_read
+	mov r2, r24
+	pop r16
+	ret
+
+
+; Reads Total potentiometer val and stores it into r0
+get_pot_b_val:
+	push r16
+	ldi r16, POT_B_mc
+	sts ADC0_MUXPOS, r16
+	rcall adc_read
+	mov r3, r24
+	pop r16
+	ret
+
+
+; Gets all potentiometer values and stores them into
+; r0 (Total), r1 (R), r2 (G) and r3 (B)
+get_pot_vals:
+	rcall get_pot_t_val
+	rcall get_pot_r_val
+	rcall get_pot_g_val
+	rcall get_pot_b_val
+	ret
+
+
+; Gets rgb potentiometer values and stores them into
+; r1 (R), r2 (G) and r3 (B)
+get_rgb_vals:
+	rcall get_pot_r_val
+	rcall get_pot_g_val
+	rcall get_pot_b_val
+	ret
+
+
+; Gets values from r0 (Total), r1 (R), r2 (G) and r3 (B)
 drive_leds_pwm:
 	; Push work registers to stack
 	push r16
@@ -178,10 +219,10 @@ drive_leds_pwm:
 	push r18
 	push r19
 	; Move subroutine variables to work registers
-	mov r16, r24
-	mov r17, r25
-	mov r18, r26
-	mov r19, r27
+	mov r16, r0
+	mov r17, r1
+	mov r18, r2
+	mov r19, r3
 
 	; Calculate true brightness of each led
 	; Red
@@ -211,14 +252,14 @@ drive_leds_pwm:
 	pop r16
 	ret
 
-init:
-; ADC init
+adc_init:
 	ldi r16, ADC_CTRLC_CONF
 	sts ADC0_CTRLC, r16
 	ldi r16, ADC_CTRLA_CONF
 	sts ADC0_CTRLA, r16
+	ret
 
-; PORT init
+port_init:
 	; Button pin I/O directions
 	lds r16, BTN_POW_DIR
 	ldi r17, BTN_POW_bm
@@ -273,19 +314,28 @@ init:
 	ldi r17, LED_B_bm
 	or r16, r17
 	sts LED_B_DIR, r16
+	ret
 
-; TCA0 init
+tca0_init:
 	; Configure PORTMUX to route TCA outputs to PORTB
 	ldi r16, PORTMUX_TCA0_PORTB_gc
 	sts PORTMUX_TCAROUTEA, r16
 	; Set the PWM period (frequency)
 	ldi r16, 0xFF
-	sts TCA0_SINGLE_PER, r16
+	sts TCA0_SINGLE_PERBUFL, r16
+	ldi r16, 0x00
+	sts TCA0_SINGLE_PERBUFH, r16
 	; Set TCA0_CTRLA confifuration
 	ldi r16, TCA0_CTRLA_CONF
 	sts TCA0_SINGLE_CTRLA, r16
+	ldi r16, TCA0_CTRLB_CONF
+	sts TCA0_SINGLE_CTRLB
+	ret
 
-
+init:
+	rcall adc_init
+	rcall port_init
+	rcall tca0_init
 ; Initial values
 	ldi r31, 0x00 ; RGB LED mode value
 
