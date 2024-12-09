@@ -12,7 +12,6 @@ jmp start
 .org PORTA_PORT_vect
 jmp PORTA_ISR
 
-
 ; ADC0 configuration
 ; ADC0_CTRLC configuration
 .equ ADC_SAMPCAP = 0b1
@@ -32,7 +31,7 @@ jmp PORTA_ISR
 .equ TCA0_CTRLA_CONF = (TCA_SINGLE_CLKSEL_DIV | TCA_SINGLE_ENABLE_bm)
 .equ TCA0_CTRLB_CONF = (TCA0_CMPxEN | TCA_SINGLE_WGMODE_SINGLESLOPE_gc)
 
-; Mode button interrupt configuration
+; Power button interrupt configuration
 .equ PORT_ISC = PORT_ISC_RISING_gc
 
 ; Ports
@@ -64,14 +63,6 @@ jmp PORTA_ISR
 .equ BTN_POW_IN = BTN_POW_reg + PORT_IN_offset
 .equ BTN_POW_bm = (1 << BTN_POW_bp)
 .equ BTN_POW_INTFLAGS = BTN_POW_reg + PORT_INTFLAGS_offset
-
-.equ BTN_MOD_reg = PORTA_base
-.equ BTN_MOD_bp = 0x00
-.equ BTM_MOD_PIN_offset = (PORT_PIN0CTRL_offset + BTN_MOD_bp)
-.equ BTN_MOD_DIR = BTN_MOD_reg + PORT_DIR_offset
-.equ BTN_MOD_IN = BTN_MOD_reg + PORT_IN_offset
-.equ BTN_MOD_bm = (1 << BTN_MOD_bp)
-.equ BTN_MOD_INTFLAGS = BTN_MOD_reg + PORT_INTFLAGS_offset
 
 
 ; Potentiometers
@@ -112,9 +103,17 @@ jmp PORTA_ISR
 
 .equ TCA0_SINGLE_PERL = TCA0_SINGLE_PER
 .equ TCA0_SINGLE_PERH = (TCA0_SINGLE_PERL + 0x01)
+.equ TCA0_SINGLE_PERL_val = 0xFF
+.equ TCA0_SINGLE_PERH_val = 0x00
 
 .equ PORTMUX_TCA0_reg = PORTMUX_TCA0_PORTB_gc
 
+; TCB configuration
+.equ TCB0_CLKSEL = TCB_CLKSEL_CLKDIV2_gc
+.equ TCB0_CNT_MODE = TCB_CNTMODE_INT_gc
+.equ TCB0_CTRLA_CONF = (TCB0_CLKSEL | TCB_ENABLE_bm)
+.equ TCB0_CTRLB_CONF = (TCB0_CNT_MODE)
+.equ TCB0_INTCTRL_CONF = TCB_CAPT_bm
 
 ; LED duty cycle registers
 .equ LED_R_dc_L = TCA0_SINGLE_CMP0L
@@ -125,6 +124,12 @@ jmp PORTA_ISR
 .equ LED_B_dc_H = (LED_B_dc_L + 1)
 
 
+; Registers
+.def pot_t_val_reg = r2
+.def pot_r_val_reg = r3
+.def pot_g_val_reg = r4
+.def pot_b_val_reg = r5
+.def pow_state_val_reg = r6
 
 start:
 	; Stack pointer init
@@ -136,7 +141,7 @@ start:
 
 
 ; When calling adc_read, have r24 set as the ADC input pin Selection Bit
-; ADC0_RES will be stored in r24 upon return
+; 8-bit ADC0_RES will be stored in r24 upon return
 adc_read:
 	; Start conversion
 	push r16
@@ -158,62 +163,64 @@ wait_for_conversion:
 
 ; Given two 8 bit brightness values in r24 and r25
 ; Calculates combined brightness value and returns it to r24
+; Also does bitwise and between calculated value and powerstate (pow_state_val_reg)
+; f(r24, r25, pow_state_val_reg) = (x * y / 256) & pow_state_val_reg
 calculate_brightness:
-	push r0
+	push pot_t_val_reg
 	push r1
 	mul r24, r25
 	mov r24, r1
 	clr r25
 	pop r1
-	pop r0
+	pop pot_t_val_reg
 	ret
 
-; Reads Total potentiometer val and stores it into r0
+; Reads Total potentiometer val and stores it into pot_t_val_reg
 get_pot_t_val:
 	push r16
 	ldi r16, POT_T_mc
 	sts ADC0_MUXPOS, r16
 	rcall adc_read
-	mov r0, r24
+	mov pot_t_val_reg, r24
 	pop r16
 	ret
 
 
-; Reads Total potentiometer val and stores it into r0
+; Reads Total potentiometer val and stores it into pot_t_val_reg
 get_pot_r_val:
 	push r16
 	ldi r16, POT_R_mc
 	sts ADC0_MUXPOS, r16
 	rcall adc_read
-	mov r1, r24
+	mov pot_r_val_reg, r24
 	pop r16
 	ret
 
 
-; Reads Total potentiometer val and stores it into r0
+; Reads Total potentiometer val and stores it into pot_t_val_reg
 get_pot_g_val:
 	push r16
 	ldi r16, POT_G_mc
 	sts ADC0_MUXPOS, r16
 	rcall adc_read
-	mov r2, r24
+	mov pot_g_val_reg, r24
 	pop r16
 	ret
 
 
-; Reads Total potentiometer val and stores it into r0
+; Reads Total potentiometer val and stores it into pot_t_val_reg
 get_pot_b_val:
 	push r16
 	ldi r16, POT_B_mc
 	sts ADC0_MUXPOS, r16
 	rcall adc_read
-	mov r3, r24
+	mov pot_b_val_reg, r24
 	pop r16
 	ret
 
 
 ; Gets all potentiometer values and stores them into
-; r0 (Total), r1 (R), r2 (G) and r3 (B)
+; pot_t_val_reg (Total), pot_r_val_reg (R), pot_g_val_reg (G) and pot_b_val_reg (B)
 get_pot_vals:
 	rcall get_pot_t_val
 	rcall get_pot_r_val
@@ -223,7 +230,7 @@ get_pot_vals:
 
 
 ; Gets rgb potentiometer values and stores them into
-; r1 (R), r2 (G) and r3 (B)
+; pot_r_val_reg (R), pot_g_val_reg (G) and pot_b_val_reg (B)
 get_rgb_vals:
 	rcall get_pot_r_val
 	rcall get_pot_g_val
@@ -231,7 +238,7 @@ get_rgb_vals:
 	ret
 
 
-; Gets values from r0 (Total), r1 (R), r2 (G) and r3 (B)
+; Gets values from pot_t_val_reg (Total), pot_r_val_reg (R), pot_g_val_reg (G) and pot_b_val_reg (B)
 drive_leds_pwm:
 	; Push work registers to stack
 	push r16
@@ -239,11 +246,11 @@ drive_leds_pwm:
 	push r18
 	push r19
 	; Move subroutine variables to work registers
-	mov r16, r0
-	mov r17, r1
-	mov r18, r2
-	mov r19, r3
-
+	mov r16, pot_t_val_reg
+	mov r17, pot_r_val_reg
+	mov r18, pot_g_val_reg
+	mov r19, pot_b_val_reg
+	and r16, pow_state_val_reg
 	; Calculate true brightness of each led
 	; Red
 	mov r25, r16
@@ -278,24 +285,20 @@ drive_leds_pwm:
 	ret
 
 PORTA_ISR:
-	lds r16, BTN_MOD_INTFLAGS
-	andi r16, BTN_MOD_bm
-	cpi r16, BTN_MOD_bm
-	breq porta_isr_mod
-	rjmp porta_isr_pow
+	lds r16, BTN_POW_INTFLAGS
+	andi r16, BTN_POW_bm
+	cpi r16, BTN_POW_bm
+	breq porta_isr_pow
+	; Reset all interrupt flags
+	lds r16, BTN_POW_INTFLAGS
+	sts BTN_POW_INTFLAGS, r16
+	reti
 	
 porta_isr_pow:
-	com r4
+	com pow_state_val_reg
 	ldi r16, BTN_POW_bm
-	sts BTN_MOD_INTFLAGS, r16
-	reti
-
-porta_isr_mod:
-	inc r5
-	ldi r16, BTN_MOD_bm
 	sts BTN_POW_INTFLAGS, r16
-	reti		
-
+	reti
 
 adc_init:
 	ldi r16, ADC_CTRLC_CONF
@@ -311,12 +314,6 @@ port_init:
 	com r17
 	and r16, r17
 	sts BTN_POW_DIR, r16
-
-	lds r16, BTN_MOD_DIR
-	ldi r17, BTN_MOD_bm
-	com r17
-	and r16, r17
-	sts BTN_MOD_DIR, r16
 
 
 	; LED pin I/O directions
@@ -361,14 +358,14 @@ port_init:
 	sts LED_B_DIR, r16
 	ret
 
-tca0_init:
+tca_init:
 	; Configure PORTMUX to route TCA outputs to PORTB
 	ldi r16, PORTMUX_TCA0_reg
 	sts PORTMUX_TCAROUTEA, r16
 	; Set the PWM period (frequency)
-	ldi r16, 0xFF
+	ldi r16, TCA0_SINGLE_PERL_val
 	sts TCA0_SINGLE_PERL, r16
-	ldi r16, 0x00
+	ldi r16, TCA0_SINGLE_PERH_val
 	sts TCA0_SINGLE_PERH, r16
 	; Set TCA0_CTRLA confifuration
 	ldi r16, TCA0_CTRLA_CONF
@@ -377,11 +374,11 @@ tca0_init:
 	sts TCA0_SINGLE_CTRLB, r16
 	ret
 
-interrupt_init:
-    ; Configure PA0 (BTN_MOD) for interrupt
-    ldi r17, PORT_ISC
-    sts BTN_MOD_reg + BTM_MOD_PIN_offset, r17
+timer_init:
+	rcall tca_init
+	ret
 
+interrupt_init:
     ; Configure PA1 (BTN_POW) for interrupt
     ldi r17, PORT_ISC
     sts BTN_POW_reg + BTM_POW_PIN_offset, r17
@@ -391,47 +388,16 @@ interrupt_init:
 init:
 	rcall adc_init
 	rcall port_init
-	rcall tca0_init
+	rcall timer_init
 	rcall interrupt_init
 ; Initial values
 	ldi r16, 0xFF ; LED Power state
-	mov r4, r16
-	ldi r16, 0x00 ; RGB LED mode value
-	mov r5, r16
-	ldi r16, 0x00 ; Rainbow cycle step
-	mov r6, r16
-
-; Enable global interrupts
+	mov pow_state_val_reg, r16
 	sei
 
 	rjmp loop
 
-
-mode_manual:
+loop:
 	rcall get_pot_vals
 	rcall drive_leds_pwm
-	rjmp loop
-
-mode_breath:
-	; WIP
-	rjmp loop
-
-mode_rainbow:
-	rcall get_pot_t_val
-	mov r0, r24
-
-
-    rjmp loop
-
-loop:
-	mov r16, r5
-	andi r16, 0x03
-	cpi r16, 0x00
-	breq mode_manual
-	cpi r16, 0x01
-	breq mode_breath
-	cpi r16, 0x02
-	breq mode_rainbow
-
-
 	rjmp loop
