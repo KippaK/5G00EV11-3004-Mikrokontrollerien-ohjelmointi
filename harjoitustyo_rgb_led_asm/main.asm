@@ -7,6 +7,12 @@
 
 .INCLUDE "m4809def.inc"
 
+.org 0
+jmp start
+.org PORTA_PORT_vect
+jmp PORTA_ISR
+
+
 ; ADC0 configuration
 ; ADC0_CTRLC configuration
 .equ ADC_SAMPCAP = 0b1
@@ -25,6 +31,9 @@
 .equ TCA0_CMPxEN = (TCA_SINGLE_CMP0EN_bm | TCA_SINGLE_CMP1EN_bm | TCA_SINGLE_CMP2EN_bm)
 .equ TCA0_CTRLA_CONF = (TCA_SINGLE_CLKSEL_DIV | TCA_SINGLE_ENABLE_bm)
 .equ TCA0_CTRLB_CONF = (TCA0_CMPxEN | TCA_SINGLE_WGMODE_SINGLESLOPE_gc)
+
+; Mode button interrupt configuration
+.equ PORT_ISC = PORT_ISC_RISING_gc
 
 ; Ports
 ; LEDS
@@ -50,15 +59,19 @@
 ; Buttons
 .equ BTN_POW_reg = PORTA_base
 .equ BTN_POW_bp = 0x01
+.equ BTM_POW_PIN_offset = (PORT_PIN0CTRL_offset + BTN_POW_bp)
 .equ BTN_POW_DIR = BTN_POW_reg + PORT_DIR_offset
 .equ BTN_POW_IN = BTN_POW_reg + PORT_IN_offset
 .equ BTN_POW_bm = (1 << BTN_POW_bp)
+.equ BTN_POW_INTFLAGS = BTN_POW_reg + PORT_INTFLAGS_offset
 
-.equ BTN_MOD_reg = PORTE_base
-.equ BTN_MOD_bp = 0x03
+.equ BTN_MOD_reg = PORTA_base
+.equ BTN_MOD_bp = 0x00
+.equ BTM_MOD_PIN_offset = (PORT_PIN0CTRL_offset + BTN_MOD_bp)
 .equ BTN_MOD_DIR = BTN_MOD_reg + PORT_DIR_offset
 .equ BTN_MOD_IN = BTN_MOD_reg + PORT_IN_offset
 .equ BTN_MOD_bm = (1 << BTN_MOD_bp)
+.equ BTN_MOD_INTFLAGS = BTN_MOD_reg + PORT_INTFLAGS_offset
 
 
 ; Potentiometers
@@ -264,6 +277,26 @@ drive_leds_pwm:
 	pop r16
 	ret
 
+PORTA_ISR:
+	lds r16, BTN_MOD_INTFLAGS
+	andi r16, BTN_MOD_bm
+	cpi r16, BTN_MOD_bm
+	breq porta_isr_mod
+	rjmp porta_isr_pow
+	
+porta_isr_pow:
+	com r4
+	ldi r16, BTN_POW_bm
+	sts BTN_MOD_INTFLAGS, r16
+	reti
+
+porta_isr_mod:
+	inc r5
+	ldi r16, BTN_MOD_bm
+	sts BTN_POW_INTFLAGS, r16
+	reti		
+
+
 adc_init:
 	ldi r16, ADC_CTRLC_CONF
 	sts ADC0_CTRLC, r16
@@ -344,12 +377,32 @@ tca0_init:
 	sts TCA0_SINGLE_CTRLB, r16
 	ret
 
+interrupt_init:
+    ; Configure PA0 (BTN_MOD) for interrupt
+    ldi r17, PORT_ISC
+    sts BTN_MOD_reg + BTM_MOD_PIN_offset, r17
+
+    ; Configure PA1 (BTN_POW) for interrupt
+    ldi r17, PORT_ISC
+    sts BTN_POW_reg + BTM_POW_PIN_offset, r17
+
+    ret
+
 init:
 	rcall adc_init
 	rcall port_init
 	rcall tca0_init
+	rcall interrupt_init
 ; Initial values
-	ldi r31, 0x00 ; RGB LED mode value
+	ldi r16, 0xFF ; LED Power state
+	mov r4, r16
+	ldi r16, 0x00 ; RGB LED mode value
+	mov r5, r16
+	ldi r16, 0x00 ; Rainbow cycle step
+	mov r6, r16
+
+; Enable global interrupts
+	sei
 
 	rjmp loop
 
@@ -364,11 +417,14 @@ mode_breath:
 	rjmp loop
 
 mode_rainbow:
-	; WIP
-	rjmp loop
+	rcall get_pot_t_val
+	mov r0, r24
+
+
+    rjmp loop
 
 loop:
-	mov r16, r31
+	mov r16, r5
 	andi r16, 0x03
 	cpi r16, 0x00
 	breq mode_manual

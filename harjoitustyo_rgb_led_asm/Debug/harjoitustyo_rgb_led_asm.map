@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Sun Dec 08 11:14:17 2024
+AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Mon Dec 09 02:52:35 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -3019,6 +3019,8 @@ EQU  USART3_RXC_voffset 00000000
 EQU  USART3_DRE_voffset 00000002
 EQU  USART3_TXC_voffset 00000004
 EQU  INT_VECTORS_SIZE 00000050
+CSEG start        0000000e
+CSEG PORTA_ISR    0000007a
 EQU  ADC_SAMPCAP  00000001
 EQU  ADC_REFSEL   00000010
 EQU  ADC_PRESC    00000000
@@ -3030,6 +3032,7 @@ EQU  TCA_SINGLE_CLKSEL_DIV 0000000a
 EQU  TCA0_CMPxEN  00000070
 EQU  TCA0_CTRLA_CONF 0000000b
 EQU  TCA0_CTRLB_CONF 00000073
+EQU  PORT_ISC     00000002
 EQU  LED_R_reg    00000420
 EQU  LED_R_bp     00000000
 EQU  LED_R_bm     00000001
@@ -3047,14 +3050,18 @@ EQU  LED_B_DIR    00000420
 EQU  LED_B_OUT    00000424
 EQU  BTN_POW_reg  00000400
 EQU  BTN_POW_bp   00000001
+EQU  BTM_POW_PIN_offset 00000011
 EQU  BTN_POW_DIR  00000400
 EQU  BTN_POW_IN   00000408
 EQU  BTN_POW_bm   00000002
-EQU  BTN_MOD_reg  00000480
-EQU  BTN_MOD_bp   00000003
-EQU  BTN_MOD_DIR  00000480
-EQU  BTN_MOD_IN   00000488
-EQU  BTN_MOD_bm   00000008
+EQU  BTN_POW_INTFLAGS 00000409
+EQU  BTN_MOD_reg  00000400
+EQU  BTN_MOD_bp   00000000
+EQU  BTM_MOD_PIN_offset 00000010
+EQU  BTN_MOD_DIR  00000400
+EQU  BTN_MOD_IN   00000408
+EQU  BTN_MOD_bm   00000001
+EQU  BTN_MOD_INTFLAGS 00000409
 EQU  POT_T_reg    00000460
 EQU  POT_T_bp     00000003
 EQU  POT_T_DIR    00000460
@@ -3091,22 +3098,24 @@ EQU  LED_G_dc_L   00000a2a
 EQU  LED_G_dc_H   00000a2b
 EQU  LED_B_dc_L   00000a2c
 EQU  LED_B_dc_H   00000a2d
-CSEG start        00000000
-CSEG init         000000c0
-CSEG adc_read     00000005
-CSEG wait_for_conversion 00000009
-CSEG calculate_brightness 00000015
-CSEG get_pot_t_val 0000001d
-CSEG get_pot_r_val 00000025
-CSEG get_pot_g_val 0000002d
-CSEG get_pot_b_val 00000035
-CSEG get_pot_vals 0000003d
-CSEG get_rgb_vals 00000042
-CSEG drive_leds_pwm 00000046
-CSEG adc_init     0000006c
-CSEG port_init    00000073
-CSEG tca0_init    000000b0
-CSEG loop         000000ca
-CSEG mode_manual  000000c5
-CSEG mode_breath  000000c8
-CSEG mode_rainbow 000000c9
+CSEG init         000000eb
+CSEG adc_read     00000013
+CSEG wait_for_conversion 00000017
+CSEG calculate_brightness 00000023
+CSEG get_pot_t_val 0000002b
+CSEG get_pot_r_val 00000033
+CSEG get_pot_g_val 0000003b
+CSEG get_pot_b_val 00000043
+CSEG get_pot_vals 0000004b
+CSEG get_rgb_vals 00000050
+CSEG drive_leds_pwm 00000054
+CSEG porta_isr_mod 00000088
+CSEG porta_isr_pow 00000080
+CSEG adc_init     00000090
+CSEG port_init    00000097
+CSEG tca0_init    000000d4
+CSEG interrupt_init 000000e4
+CSEG loop         000000fe
+CSEG mode_manual  000000f7
+CSEG mode_breath  000000fa
+CSEG mode_rainbow 000000fb
