@@ -11,6 +11,8 @@
 jmp start
 .org PORTA_PORT_vect
 jmp PORTA_ISR
+.org TCB0_INT_vect
+jmp TCB0_ISR
 
 ; ADC0 configuration
 ; ADC0_CTRLC configuration
@@ -31,7 +33,7 @@ jmp PORTA_ISR
 .equ TCA0_CTRLA_CONF = (TCA_SINGLE_CLKSEL_DIV | TCA_SINGLE_ENABLE_bm)
 .equ TCA0_CTRLB_CONF = (TCA0_CMPxEN | TCA_SINGLE_WGMODE_SINGLESLOPE_gc)
 
-; Power button interrupt configuration
+; Button interrupt configuration
 .equ PORT_ISC = PORT_ISC_RISING_gc
 
 ; Ports
@@ -63,6 +65,14 @@ jmp PORTA_ISR
 .equ BTN_POW_IN = BTN_POW_reg + PORT_IN_offset
 .equ BTN_POW_bm = (1 << BTN_POW_bp)
 .equ BTN_POW_INTFLAGS = BTN_POW_reg + PORT_INTFLAGS_offset
+
+.equ BTN_MOD_reg = PORTA_base
+.equ BTN_MOD_bp = 0x00
+.equ BTM_MOD_PIN_offset = (PORT_PIN0CTRL_offset + BTN_MOD_bp)
+.equ BTN_MOD_DIR = BTN_MOD_reg + PORT_DIR_offset
+.equ BTN_MOD_IN = BTN_MOD_reg + PORT_IN_offset
+.equ BTN_MOD_bm = (1 << BTN_MOD_bp)
+.equ BTN_MOD_INTFLAGS = BTN_MOD_reg + PORT_INTFLAGS_offset
 
 
 ; Potentiometers
@@ -130,6 +140,8 @@ jmp PORTA_ISR
 .def pot_g_val_reg = r4
 .def pot_b_val_reg = r5
 .def pow_state_val_reg = r6
+.def mode_state_val_reg = r7
+.def mode_step_val_reg = r8
 
 start:
 	; Stack pointer init
@@ -186,7 +198,7 @@ get_pot_t_val:
 	ret
 
 
-; Reads Total potentiometer val and stores it into pot_t_val_reg
+; Reads Total potentiometer val and stores it into pot_r_val_reg
 get_pot_r_val:
 	push r16
 	ldi r16, POT_R_mc
@@ -197,7 +209,7 @@ get_pot_r_val:
 	ret
 
 
-; Reads Total potentiometer val and stores it into pot_t_val_reg
+; Reads Total potentiometer val and stores it into pot_g_val_reg
 get_pot_g_val:
 	push r16
 	ldi r16, POT_G_mc
@@ -208,7 +220,7 @@ get_pot_g_val:
 	ret
 
 
-; Reads Total potentiometer val and stores it into pot_t_val_reg
+; Reads Total potentiometer val and stores it into pot_b_val_reg
 get_pot_b_val:
 	push r16
 	ldi r16, POT_B_mc
@@ -237,6 +249,13 @@ get_rgb_vals:
 	rcall get_pot_b_val
 	ret
 
+; Gets value from pot_t_val_reg and stores it into TCB0_CCMPH
+set_mode_speed:
+	mov r16, pot_t_val_reg
+	ldi r17, 0xFF
+	sts TCB0_CCMPL, r17
+	sts TCB0_CCMPH, r16
+	ret
 
 ; Gets values from pot_t_val_reg (Total), pot_r_val_reg (R), pot_g_val_reg (G) and pot_b_val_reg (B)
 drive_leds_pwm:
@@ -298,6 +317,14 @@ porta_isr_pow:
 	com pow_state_val_reg
 	ldi r16, BTN_POW_bm
 	sts BTN_POW_INTFLAGS, r16
+	reti
+
+TCB0_ISR:
+	lds r16, TCB0_INTFLAGS
+	sbrs r16, 0
+	reti
+	sts TCB0_INTFLAGS, r16
+	inc mode_step_val_reg
 	reti
 
 adc_init:
@@ -374,8 +401,21 @@ tca_init:
 	sts TCA0_SINGLE_CTRLB, r16
 	ret
 
+tcb_init:
+	ldi r16, TCB0_CTRLA_CONF
+	sts TCB0_CTRLA, r16
+	ldi r16, TCB0_CTRLB_CONF
+	sts TCB0_CTRLB, r16
+	ldi r16, TCB0_INTCTRL_CONF
+	sts TCB0_INTCTRL, r16
+	ldi r16, 0xFF
+	sts TCB0_CCMPL, r16
+	sts TCB0_CCMPH, r16
+	ret
+
 timer_init:
 	rcall tca_init
+	rcall tcb_init
 	ret
 
 interrupt_init:
@@ -393,11 +433,48 @@ init:
 ; Initial values
 	ldi r16, 0xFF ; LED Power state
 	mov pow_state_val_reg, r16
+	ldi r16, 0x00
+	mov mode_state_val_reg, r16
+	mov mode_step_val_reg, r16
 	sei
 
 	rjmp loop
 
-loop:
+mode_manual:
 	rcall get_pot_vals
 	rcall drive_leds_pwm
+	rjmp loop
+
+mode_breath:
+	rcall get_pot_t_val
+	rcall set_mode_speed
+	mov r16, mode_step_val_reg
+	; r17 -> (255 - mode_step_val_reg)
+	ldi r17, 0xFF
+	sub r17, r16
+	; if r16 >= 128 -> move r17 into r16
+	sbrc r16, 7
+	mov r16, r17
+	ldi r17, 0x02
+	muls r16, r17
+	rcall get_rgb_vals
+	rcall drive_leds_pwm
+
+	rjmp loop
+
+mode_rainbow:
+	rcall get_pot_t_val
+	rcall set_mode_speed
+
+	rjmp loop	
+
+loop:
+	mov r16, mode_state_val_reg
+	andi r16, 0x03
+	cpi r16, 0x00
+	breq mode_manual
+	cpi r16, 0x01
+	breq mode_breath
+	cpi r16, 0x02
+	breq mode_rainbow
 	rjmp loop

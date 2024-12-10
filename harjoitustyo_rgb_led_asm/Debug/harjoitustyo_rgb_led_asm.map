@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Mon Dec 09 16:13:55 2024
+AVRASM ver. 2.2.8  E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Tue Dec 10 08:05:39 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -3019,8 +3019,9 @@ EQU  USART3_RXC_voffset 00000000
 EQU  USART3_DRE_voffset 00000002
 EQU  USART3_TXC_voffset 00000004
 EQU  INT_VECTORS_SIZE 00000050
-CSEG start        0000000e
-CSEG PORTA_ISR    0000007b
+CSEG start        0000001a
+CSEG PORTA_ISR    0000008e
+CSEG TCB0_ISR     0000009d
 EQU  ADC_SAMPCAP  00000001
 EQU  ADC_REFSEL   00000010
 EQU  ADC_PRESC    00000000
@@ -3055,6 +3056,13 @@ EQU  BTN_POW_DIR  00000400
 EQU  BTN_POW_IN   00000408
 EQU  BTN_POW_bm   00000002
 EQU  BTN_POW_INTFLAGS 00000409
+EQU  BTN_MOD_reg  00000400
+EQU  BTN_MOD_bp   00000000
+EQU  BTM_MOD_PIN_offset 00000010
+EQU  BTN_MOD_DIR  00000400
+EQU  BTN_MOD_IN   00000408
+EQU  BTN_MOD_bm   00000001
+EQU  BTN_MOD_INTFLAGS 00000409
 EQU  POT_T_reg    00000460
 EQU  POT_T_bp     00000003
 EQU  POT_T_DIR    00000460
@@ -3103,21 +3111,28 @@ DEF  pot_r_val_reg r3
 DEF  pot_g_val_reg r4
 DEF  pot_b_val_reg r5
 DEF  pow_state_val_reg r6
-CSEG init         000000dd
-CSEG adc_read     00000013
-CSEG wait_for_conversion 00000017
-CSEG calculate_brightness 00000023
-CSEG get_pot_t_val 0000002b
-CSEG get_pot_r_val 00000033
-CSEG get_pot_g_val 0000003b
-CSEG get_pot_b_val 00000043
-CSEG get_pot_vals 0000004b
-CSEG get_rgb_vals 00000050
-CSEG drive_leds_pwm 00000054
-CSEG porta_isr_pow 00000085
-CSEG adc_init     0000008a
-CSEG port_init    00000091
-CSEG tca_init     000000c7
-CSEG timer_init   000000d7
-CSEG interrupt_init 000000d9
-CSEG loop         000000e5
+DEF  mode_state_val_reg r7
+DEF  mode_step_val_reg r8
+CSEG init         00000108
+CSEG adc_read     0000001f
+CSEG wait_for_conversion 00000023
+CSEG calculate_brightness 0000002f
+CSEG get_pot_t_val 00000037
+CSEG get_pot_r_val 0000003f
+CSEG get_pot_g_val 00000047
+CSEG get_pot_b_val 0000004f
+CSEG get_pot_vals 00000057
+CSEG get_rgb_vals 0000005c
+CSEG set_mode_speed 00000060
+CSEG drive_leds_pwm 00000067
+CSEG porta_isr_pow 00000098
+CSEG adc_init     000000a5
+CSEG port_init    000000ac
+CSEG tca_init     000000e2
+CSEG tcb_init     000000f2
+CSEG timer_init   00000101
+CSEG interrupt_init 00000104
+CSEG loop         00000125
+CSEG mode_manual  00000113
+CSEG mode_breath  00000116
+CSEG mode_rainbow 00000122
