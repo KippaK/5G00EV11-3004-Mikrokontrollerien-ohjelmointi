@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Tue Dec 10 11:12:03 2024
+AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Tue Dec 10 13:33:11 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -3021,7 +3021,7 @@ EQU  USART3_TXC_voffset 00000004
 EQU  INT_VECTORS_SIZE 00000050
 CSEG start        0000001a
 CSEG PORTA_ISR    0000008e
-CSEG TCB0_ISR     000000a8
+CSEG TCB0_ISR     000000a7
 EQU  ADC_SAMPCAP  00000001
 EQU  ADC_REFSEL   00000010
 EQU  ADC_PRESC    00000000
@@ -3113,7 +3113,7 @@ DEF  pot_b_val_reg r5
 DEF  pow_state_val_reg r6
 DEF  mode_state_val_reg r7
 DEF  mode_step_val_reg r8
-CSEG init         0000011c
+CSEG init         0000011b
 CSEG adc_read     0000001f
 CSEG wait_for_conversion 00000023
 CSEG calculate_brightness 0000002f
@@ -3128,13 +3128,12 @@ CSEG update_mode_speed 00000064
 CSEG drive_leds_pwm 00000067
 CSEG POWER_ISR    0000009d
 CSEG MODE_ISR     000000a2
-CSEG adc_init     000000b0
-CSEG port_init    000000b7
-CSEG tca_init     000000f4
-CSEG tcb_init     00000104
-CSEG timer_init   00000113
-CSEG interrupt_init 00000116
+CSEG adc_init     000000af
+CSEG port_init    000000b6
+CSEG tca_init     000000f3
+CSEG tcb_init     00000103
+CSEG timer_init   00000112
+CSEG interrupt_init 00000115
 CSEG loop         00000135
-CSEG mode_manual  00000127
-CSEG mode_breath  0000012a
-CSEG debug        0000013c
+CSEG mode_manual  00000126
+CSEG mode_breath  00000129

@@ -330,7 +330,7 @@ POWER_ISR:
 
 MODE_ISR:
 	inc mode_state_val_reg
-	lds r16, BTN_MOD_bm
+	ldi r16, BTN_MOD_bm
 	sts BTN_MOD_INTFLAGS, r16
 	reti
 
@@ -477,24 +477,16 @@ mode_breath:
 	mov r16, r17
 	ldi r17, 0x02
 	muls r16, r17
+	mov pot_t_val_reg, r0
 	rcall get_rgb_vals
 	rcall drive_leds_pwm
 	rjmp loop
 
 loop:
 	mov r16, mode_state_val_reg
-	; DEBUG
-;	mov r17, pot_t_val_reg
-;	cpi r17, 0xFF
-;	breq debug
-	; DEBUG END
 	andi r16, 0x01
 	cpi r16, 0x00
 	breq mode_manual
 	cpi r16, 0x01
 	breq mode_breath
-	rjmp loop
-
-debug:
-	nop
 	rjmp loop

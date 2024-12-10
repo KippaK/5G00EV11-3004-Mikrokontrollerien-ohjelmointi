@@ -46,9 +46,8 @@
   <tcb_init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>425</LINE></tcb_init>
   <timer_init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>437</LINE></timer_init>
   <interrupt_init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>442</LINE></interrupt_init>
-  <loop><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>484</LINE></loop>
+  <loop><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>485</LINE></loop>
   <mode_manual><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>464</LINE></mode_manual>
   <mode_breath><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>469</LINE></mode_breath>
-  <debug><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>498</LINE></debug>
  </LABELS>
 </ASSEMBLER_INFO>
