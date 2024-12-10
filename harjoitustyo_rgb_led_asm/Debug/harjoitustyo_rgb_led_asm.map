@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Mon Dec 09 16:13:55 2024
+AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Tue Dec 10 12:46:27 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -3020,7 +3020,7 @@ EQU  USART3_DRE_voffset 00000002
 EQU  USART3_TXC_voffset 00000004
 EQU  INT_VECTORS_SIZE 00000050
 CSEG start        0000000e
-CSEG PORTA_ISR    0000007b
+CSEG PORTA_ISR    00000078
 EQU  ADC_SAMPCAP  00000001
 EQU  ADC_REFSEL   00000010
 EQU  ADC_PRESC    00000000
@@ -3103,21 +3103,22 @@ DEF  pot_r_val_reg r3
 DEF  pot_g_val_reg r4
 DEF  pot_b_val_reg r5
 DEF  pow_state_val_reg r6
-CSEG init         000000dd
+DEF  int_work_reg r31
+CSEG init         000000da
 CSEG adc_read     00000013
 CSEG wait_for_conversion 00000017
 CSEG calculate_brightness 00000023
-CSEG get_pot_t_val 0000002b
-CSEG get_pot_r_val 00000033
-CSEG get_pot_g_val 0000003b
-CSEG get_pot_b_val 00000043
-CSEG get_pot_vals 0000004b
-CSEG get_rgb_vals 00000050
-CSEG drive_leds_pwm 00000054
-CSEG porta_isr_pow 00000085
-CSEG adc_init     0000008a
-CSEG port_init    00000091
-CSEG tca_init     000000c7
-CSEG timer_init   000000d7
-CSEG interrupt_init 000000d9
-CSEG loop         000000e5
+CSEG get_pot_t_val 00000028
+CSEG get_pot_r_val 00000030
+CSEG get_pot_g_val 00000038
+CSEG get_pot_b_val 00000040
+CSEG get_pot_vals 00000048
+CSEG get_rgb_vals 0000004d
+CSEG drive_leds_pwm 00000051
+CSEG porta_isr_pow 00000082
+CSEG adc_init     00000087
+CSEG port_init    0000008e
+CSEG tca_init     000000c4
+CSEG timer_init   000000d4
+CSEG interrupt_init 000000d6
+CSEG loop         000000e2

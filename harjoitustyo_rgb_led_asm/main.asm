@@ -130,6 +130,7 @@ jmp PORTA_ISR
 .def pot_g_val_reg = r4
 .def pot_b_val_reg = r5
 .def pow_state_val_reg = r6
+.def int_work_reg = r31
 
 start:
 	; Stack pointer init
@@ -166,13 +167,10 @@ wait_for_conversion:
 ; Also does bitwise and between calculated value and powerstate (pow_state_val_reg)
 ; f(r24, r25, pow_state_val_reg) = (x * y / 256) & pow_state_val_reg
 calculate_brightness:
-	push pot_t_val_reg
-	push r1
 	mul r24, r25
 	mov r24, r1
+	and r24, pow_state_val_reg
 	clr r25
-	pop r1
-	pop pot_t_val_reg
 	ret
 
 ; Reads Total potentiometer val and stores it into pot_t_val_reg
@@ -267,7 +265,6 @@ drive_leds_pwm:
 	mov r24, r19
 	rcall calculate_brightness
 	mov r19, r24
-
 	ldi r24, 0x00
 	sts LED_R_dc_L, r17
 	sts LED_R_dc_H, r24
@@ -285,19 +282,19 @@ drive_leds_pwm:
 	ret
 
 PORTA_ISR:
-	lds r16, BTN_POW_INTFLAGS
-	andi r16, BTN_POW_bm
-	cpi r16, BTN_POW_bm
+	lds int_work_reg, BTN_POW_INTFLAGS
+	andi int_work_reg, BTN_POW_bm
+	cpi int_work_reg, BTN_POW_bm
 	breq porta_isr_pow
 	; Reset all interrupt flags
-	lds r16, BTN_POW_INTFLAGS
-	sts BTN_POW_INTFLAGS, r16
+	lds int_work_reg, BTN_POW_INTFLAGS
+	sts BTN_POW_INTFLAGS, int_work_reg
 	reti
 	
 porta_isr_pow:
 	com pow_state_val_reg
-	ldi r16, BTN_POW_bm
-	sts BTN_POW_INTFLAGS, r16
+	ldi int_work_reg, BTN_POW_bm
+	sts BTN_POW_INTFLAGS, int_work_reg
 	reti
 
 adc_init:

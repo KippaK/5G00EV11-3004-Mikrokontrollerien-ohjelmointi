@@ -1,8 +1,9 @@
 
-AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Mon Dec 09 16:13:55 2024
+AVRASM ver. 2.2.8  C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm Tue Dec 10 12:46:27 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
 C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm(8): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
+C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm(133): warning: Register r31 already defined by the .DEF directive
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
 C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm(8): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc'
                                  
@@ -4555,7 +4556,7 @@ C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main
                                  .org 0
 000000 940c 000e                 jmp start
                                  .org PORTA_PORT_vect
-00000c 940c 007b                 jmp PORTA_ISR
+00000c 940c 0078                 jmp PORTA_ISR
                                  
                                  ; ADC0 configuration
                                  ; ADC0_CTRLC configuration
@@ -4675,6 +4676,7 @@ C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main
                                  .def pot_g_val_reg = r4
                                  .def pot_b_val_reg = r5
                                  .def pow_state_val_reg = r6
+                                 .def int_work_reg = r31
                                  
                                  start:
                                  	; Stack pointer init
@@ -4682,7 +4684,7 @@ C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main
 00000f bf0e                      	out CPU_SPH, r16
 000010 ef0f                      	ldi r16, low(0x17FF)
 000011 bf0d                      	out CPU_SPL, r16
-000012 c0ca                      	rjmp init
+000012 c0c7                      	rjmp init
                                  
                                  
                                  ; When calling adc_read, have r24 set as the ADC input pin Selection Bit
@@ -4711,240 +4713,236 @@ C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main
                                  ; Also does bitwise and between calculated value and powerstate (pow_state_val_reg)
                                  ; f(r24, r25, pow_state_val_reg) = (x * y / 256) & pow_state_val_reg
                                  calculate_brightness:
-000023 922f                      	push pot_t_val_reg
-000024 921f                      	push r1
-000025 9f89                      	mul r24, r25
-000026 2d81                      	mov r24, r1
-000027 2799                      	clr r25
-000028 901f                      	pop r1
-000029 902f                      	pop pot_t_val_reg
-00002a 9508                      	ret
+000023 9f89                      	mul r24, r25
+000024 2d81                      	mov r24, r1
+000025 2186                      	and r24, pow_state_val_reg
+000026 2799                      	clr r25
+000027 9508                      	ret
                                  
                                  ; Reads Total potentiometer val and stores it into pot_t_val_reg
                                  get_pot_t_val:
-00002b 930f                      	push r16
-00002c e003                      	ldi r16, POT_T_mc
-00002d 9300 0606                 	sts ADC0_MUXPOS, r16
-00002f dfe3                      	rcall adc_read
-000030 2e28                      	mov pot_t_val_reg, r24
-000031 910f                      	pop r16
-000032 9508                      	ret
+000028 930f                      	push r16
+000029 e003                      	ldi r16, POT_T_mc
+00002a 9300 0606                 	sts ADC0_MUXPOS, r16
+00002c dfe6                      	rcall adc_read
+00002d 2e28                      	mov pot_t_val_reg, r24
+00002e 910f                      	pop r16
+00002f 9508                      	ret
                                  
                                  
                                  ; Reads Total potentiometer val and stores it into pot_t_val_reg
                                  get_pot_r_val:
-000033 930f                      	push r16
-000034 e002                      	ldi r16, POT_R_mc
-000035 9300 0606                 	sts ADC0_MUXPOS, r16
-000037 dfdb                      	rcall adc_read
-000038 2e38                      	mov pot_r_val_reg, r24
-000039 910f                      	pop r16
-00003a 9508                      	ret
+000030 930f                      	push r16
+000031 e002                      	ldi r16, POT_R_mc
+000032 9300 0606                 	sts ADC0_MUXPOS, r16
+000034 dfde                      	rcall adc_read
+000035 2e38                      	mov pot_r_val_reg, r24
+000036 910f                      	pop r16
+000037 9508                      	ret
                                  
                                  
                                  ; Reads Total potentiometer val and stores it into pot_t_val_reg
                                  get_pot_g_val:
-00003b 930f                      	push r16
-00003c e001                      	ldi r16, POT_G_mc
-00003d 9300 0606                 	sts ADC0_MUXPOS, r16
-00003f dfd3                      	rcall adc_read
-000040 2e48                      	mov pot_g_val_reg, r24
-000041 910f                      	pop r16
-000042 9508                      	ret
+000038 930f                      	push r16
+000039 e001                      	ldi r16, POT_G_mc
+00003a 9300 0606                 	sts ADC0_MUXPOS, r16
+00003c dfd6                      	rcall adc_read
+00003d 2e48                      	mov pot_g_val_reg, r24
+00003e 910f                      	pop r16
+00003f 9508                      	ret
                                  
                                  
                                  ; Reads Total potentiometer val and stores it into pot_t_val_reg
                                  get_pot_b_val:
-000043 930f                      	push r16
-000044 e000                      	ldi r16, POT_B_mc
-000045 9300 0606                 	sts ADC0_MUXPOS, r16
-000047 dfcb                      	rcall adc_read
-000048 2e58                      	mov pot_b_val_reg, r24
-000049 910f                      	pop r16
-00004a 9508                      	ret
+000040 930f                      	push r16
+000041 e000                      	ldi r16, POT_B_mc
+000042 9300 0606                 	sts ADC0_MUXPOS, r16
+000044 dfce                      	rcall adc_read
+000045 2e58                      	mov pot_b_val_reg, r24
+000046 910f                      	pop r16
+000047 9508                      	ret
                                  
                                  
                                  ; Gets all potentiometer values and stores them into
                                  ; pot_t_val_reg (Total), pot_r_val_reg (R), pot_g_val_reg (G) and pot_b_val_reg (B)
                                  get_pot_vals:
-00004b dfdf                      	rcall get_pot_t_val
-00004c dfe6                      	rcall get_pot_r_val
-00004d dfed                      	rcall get_pot_g_val
-00004e dff4                      	rcall get_pot_b_val
-00004f 9508                      	ret
+000048 dfdf                      	rcall get_pot_t_val
+000049 dfe6                      	rcall get_pot_r_val
+00004a dfed                      	rcall get_pot_g_val
+00004b dff4                      	rcall get_pot_b_val
+00004c 9508                      	ret
                                  
                                  
                                  ; Gets rgb potentiometer values and stores them into
                                  ; pot_r_val_reg (R), pot_g_val_reg (G) and pot_b_val_reg (B)
                                  get_rgb_vals:
-000050 dfe2                      	rcall get_pot_r_val
-000051 dfe9                      	rcall get_pot_g_val
-000052 dff0                      	rcall get_pot_b_val
-000053 9508                      	ret
+00004d dfe2                      	rcall get_pot_r_val
+00004e dfe9                      	rcall get_pot_g_val
+00004f dff0                      	rcall get_pot_b_val
+000050 9508                      	ret
                                  
                                  
                                  ; Gets values from pot_t_val_reg (Total), pot_r_val_reg (R), pot_g_val_reg (G) and pot_b_val_reg (B)
                                  drive_leds_pwm:
                                  	; Push work registers to stack
-000054 930f                      	push r16
-000055 931f                      	push r17
-000056 932f                      	push r18
-000057 933f                      	push r19
+000051 930f                      	push r16
+000052 931f                      	push r17
+000053 932f                      	push r18
+000054 933f                      	push r19
                                  	; Move subroutine variables to work registers
-000058 2d02                      	mov r16, pot_t_val_reg
-000059 2d13                      	mov r17, pot_r_val_reg
-00005a 2d24                      	mov r18, pot_g_val_reg
-00005b 2d35                      	mov r19, pot_b_val_reg
-00005c 2106                      	and r16, pow_state_val_reg
+000055 2d02                      	mov r16, pot_t_val_reg
+000056 2d13                      	mov r17, pot_r_val_reg
+000057 2d24                      	mov r18, pot_g_val_reg
+000058 2d35                      	mov r19, pot_b_val_reg
+000059 2106                      	and r16, pow_state_val_reg
                                  	; Calculate true brightness of each led
                                  	; Red
-00005d 2f90                      	mov r25, r16
-00005e 2f81                      	mov r24, r17
-00005f dfc3                      	rcall calculate_brightness
-000060 2f18                      	mov r17, r24
+00005a 2f90                      	mov r25, r16
+00005b 2f81                      	mov r24, r17
+00005c dfc6                      	rcall calculate_brightness
+00005d 2f18                      	mov r17, r24
                                  	; Green
-000061 2f90                      	mov r25, r16
-000062 2f82                      	mov r24, r18
-000063 dfbf                      	rcall calculate_brightness
-000064 2f28                      	mov r18, r24
+00005e 2f90                      	mov r25, r16
+00005f 2f82                      	mov r24, r18
+000060 dfc2                      	rcall calculate_brightness
+000061 2f28                      	mov r18, r24
                                  	; Blue
-000065 2f90                      	mov r25, r16
-000066 2f83                      	mov r24, r19
-000067 dfbb                      	rcall calculate_brightness
-000068 2f38                      	mov r19, r24
-                                 
-000069 e080                      	ldi r24, 0x00
-00006a 9310 0a28                 	sts LED_R_dc_L, r17
-00006c 9380 0a29                 	sts LED_R_dc_H, r24
-00006e 9320 0a2a                 	sts LED_G_dc_L, r18
-000070 9380 0a2b                 	sts LED_G_dc_H, r24
-000072 9330 0a2c                 	sts LED_B_dc_L, r19
-000074 9380 0a2d                 	sts LED_B_dc_H, r24
+000062 2f90                      	mov r25, r16
+000063 2f83                      	mov r24, r19
+000064 dfbe                      	rcall calculate_brightness
+000065 2f38                      	mov r19, r24
+000066 e080                      	ldi r24, 0x00
+000067 9310 0a28                 	sts LED_R_dc_L, r17
+000069 9380 0a29                 	sts LED_R_dc_H, r24
+00006b 9320 0a2a                 	sts LED_G_dc_L, r18
+00006d 9380 0a2b                 	sts LED_G_dc_H, r24
+00006f 9330 0a2c                 	sts LED_B_dc_L, r19
+000071 9380 0a2d                 	sts LED_B_dc_H, r24
                                  
                                  
                                  	; Pop work registers from stack
-000076 913f                      	pop r19
-000077 912f                      	pop r18
-000078 911f                      	pop r17
-000079 910f                      	pop r16
-00007a 9508                      	ret
+000073 913f                      	pop r19
+000074 912f                      	pop r18
+000075 911f                      	pop r17
+000076 910f                      	pop r16
+000077 9508                      	ret
                                  
                                  PORTA_ISR:
-00007b 9100 0409                 	lds r16, BTN_POW_INTFLAGS
-00007d 7002                      	andi r16, BTN_POW_bm
-00007e 3002                      	cpi r16, BTN_POW_bm
-00007f f029                      	breq porta_isr_pow
+000078 91f0 0409                 	lds int_work_reg, BTN_POW_INTFLAGS
+00007a 70f2                      	andi int_work_reg, BTN_POW_bm
+00007b 30f2                      	cpi int_work_reg, BTN_POW_bm
+00007c f029                      	breq porta_isr_pow
                                  	; Reset all interrupt flags
-000080 9100 0409                 	lds r16, BTN_POW_INTFLAGS
-000082 9300 0409                 	sts BTN_POW_INTFLAGS, r16
-000084 9518                      	reti
+00007d 91f0 0409                 	lds int_work_reg, BTN_POW_INTFLAGS
+00007f 93f0 0409                 	sts BTN_POW_INTFLAGS, int_work_reg
+000081 9518                      	reti
                                  	
                                  porta_isr_pow:
-000085 9460                      	com pow_state_val_reg
-000086 e002                      	ldi r16, BTN_POW_bm
-000087 9300 0409                 	sts BTN_POW_INTFLAGS, r16
-000089 9518                      	reti
+000082 9460                      	com pow_state_val_reg
+000083 e0f2                      	ldi int_work_reg, BTN_POW_bm
+000084 93f0 0409                 	sts BTN_POW_INTFLAGS, int_work_reg
+000086 9518                      	reti
                                  
                                  adc_init:
-00008a e101                      	ldi r16, ADC_CTRLC_CONF
-00008b 9300 0602                 	sts ADC0_CTRLC, r16
-00008d e005                      	ldi r16, ADC_CTRLA_CONF
-00008e 9300 0600                 	sts ADC0_CTRLA, r16
-000090 9508                      	ret
+000087 e101                      	ldi r16, ADC_CTRLC_CONF
+000088 9300 0602                 	sts ADC0_CTRLC, r16
+00008a e005                      	ldi r16, ADC_CTRLA_CONF
+00008b 9300 0600                 	sts ADC0_CTRLA, r16
+00008d 9508                      	ret
                                  
                                  port_init:
                                  	; Button pin I/O directions
-000091 9100 0400                 	lds r16, BTN_POW_DIR
-000093 e012                      	ldi r17, BTN_POW_bm
-000094 9510                      	com r17
-000095 2301                      	and r16, r17
-000096 9300 0400                 	sts BTN_POW_DIR, r16
+00008e 9100 0400                 	lds r16, BTN_POW_DIR
+000090 e012                      	ldi r17, BTN_POW_bm
+000091 9510                      	com r17
+000092 2301                      	and r16, r17
+000093 9300 0400                 	sts BTN_POW_DIR, r16
                                  
                                  
                                  	; LED pin I/O directions
-000098 9100 0460                 	lds r16, POT_T_DIR
-00009a e018                      	ldi r17, POT_T_bm
-00009b 9510                      	com r17
-00009c 2301                      	and r16, r17
-00009d 9300 0460                 	sts POT_T_DIR, r16
+000095 9100 0460                 	lds r16, POT_T_DIR
+000097 e018                      	ldi r17, POT_T_bm
+000098 9510                      	com r17
+000099 2301                      	and r16, r17
+00009a 9300 0460                 	sts POT_T_DIR, r16
                                  
-00009f 9100 0460                 	lds r16, POT_R_DIR
-0000a1 e014                      	ldi r17, POT_R_bm
-0000a2 9510                      	com r17
-0000a3 2301                      	and r16, r17
-0000a4 9300 0460                 	sts POT_R_DIR, r16
+00009c 9100 0460                 	lds r16, POT_R_DIR
+00009e e014                      	ldi r17, POT_R_bm
+00009f 9510                      	com r17
+0000a0 2301                      	and r16, r17
+0000a1 9300 0460                 	sts POT_R_DIR, r16
                                  
-0000a6 9100 0460                 	lds r16, POT_G_DIR
-0000a8 e012                      	ldi r17, POT_G_bm
-0000a9 9510                      	com r17
-0000aa 2301                      	and r16, r17
-0000ab 9300 0460                 	sts POT_G_DIR, r16
+0000a3 9100 0460                 	lds r16, POT_G_DIR
+0000a5 e012                      	ldi r17, POT_G_bm
+0000a6 9510                      	com r17
+0000a7 2301                      	and r16, r17
+0000a8 9300 0460                 	sts POT_G_DIR, r16
                                  
-0000ad 9100 0460                 	lds r16, POT_B_DIR
-0000af e011                      	ldi r17, POT_B_bm
-0000b0 9510                      	com r17
-0000b1 2301                      	and r16, r17
-0000b2 9300 0460                 	sts POT_B_DIR, r16
+0000aa 9100 0460                 	lds r16, POT_B_DIR
+0000ac e011                      	ldi r17, POT_B_bm
+0000ad 9510                      	com r17
+0000ae 2301                      	and r16, r17
+0000af 9300 0460                 	sts POT_B_DIR, r16
                                  
                                  	; LED pin I/O directions
-0000b4 9100 0420                 	lds r16, LED_R_DIR
-0000b6 e011                      	ldi r17, LED_R_bm
-0000b7 2b01                      	or r16, r17
-0000b8 9300 0420                 	sts LED_R_DIR, r16
+0000b1 9100 0420                 	lds r16, LED_R_DIR
+0000b3 e011                      	ldi r17, LED_R_bm
+0000b4 2b01                      	or r16, r17
+0000b5 9300 0420                 	sts LED_R_DIR, r16
                                  
-0000ba 9100 0420                 	lds r16, LED_G_DIR
-0000bc e012                      	ldi r17, LED_G_bm
-0000bd 2b01                      	or r16, r17
-0000be 9300 0420                 	sts LED_G_DIR, r16
+0000b7 9100 0420                 	lds r16, LED_G_DIR
+0000b9 e012                      	ldi r17, LED_G_bm
+0000ba 2b01                      	or r16, r17
+0000bb 9300 0420                 	sts LED_G_DIR, r16
                                  
-0000c0 9100 0420                 	lds r16, LED_B_DIR
-0000c2 e014                      	ldi r17, LED_B_bm
-0000c3 2b01                      	or r16, r17
-0000c4 9300 0420                 	sts LED_B_DIR, r16
-0000c6 9508                      	ret
+0000bd 9100 0420                 	lds r16, LED_B_DIR
+0000bf e014                      	ldi r17, LED_B_bm
+0000c0 2b01                      	or r16, r17
+0000c1 9300 0420                 	sts LED_B_DIR, r16
+0000c3 9508                      	ret
                                  
                                  tca_init:
                                  	; Configure PORTMUX to route TCA outputs to PORTB
-0000c7 e001                      	ldi r16, PORTMUX_TCA0_reg
-0000c8 9300 05e4                 	sts PORTMUX_TCAROUTEA, r16
+0000c4 e001                      	ldi r16, PORTMUX_TCA0_reg
+0000c5 9300 05e4                 	sts PORTMUX_TCAROUTEA, r16
                                  	; Set the PWM period (frequency)
-0000ca ef0f                      	ldi r16, TCA0_SINGLE_PERL_val
-0000cb 9300 0a26                 	sts TCA0_SINGLE_PERL, r16
-0000cd e000                      	ldi r16, TCA0_SINGLE_PERH_val
-0000ce 9300 0a27                 	sts TCA0_SINGLE_PERH, r16
+0000c7 ef0f                      	ldi r16, TCA0_SINGLE_PERL_val
+0000c8 9300 0a26                 	sts TCA0_SINGLE_PERL, r16
+0000ca e000                      	ldi r16, TCA0_SINGLE_PERH_val
+0000cb 9300 0a27                 	sts TCA0_SINGLE_PERH, r16
                                  	; Set TCA0_CTRLA confifuration
-0000d0 e00b                      	ldi r16, TCA0_CTRLA_CONF
-0000d1 9300 0a00                 	sts TCA0_SINGLE_CTRLA, r16
-0000d3 e703                      	ldi r16, TCA0_CTRLB_CONF
-0000d4 9300 0a01                 	sts TCA0_SINGLE_CTRLB, r16
-0000d6 9508                      	ret
+0000cd e00b                      	ldi r16, TCA0_CTRLA_CONF
+0000ce 9300 0a00                 	sts TCA0_SINGLE_CTRLA, r16
+0000d0 e703                      	ldi r16, TCA0_CTRLB_CONF
+0000d1 9300 0a01                 	sts TCA0_SINGLE_CTRLB, r16
+0000d3 9508                      	ret
                                  
                                  timer_init:
-0000d7 dfef                      	rcall tca_init
-0000d8 9508                      	ret
+0000d4 dfef                      	rcall tca_init
+0000d5 9508                      	ret
                                  
                                  interrupt_init:
                                      ; Configure PA1 (BTN_POW) for interrupt
-0000d9 e012                          ldi r17, PORT_ISC
-0000da 9310 0411                     sts BTN_POW_reg + BTM_POW_PIN_offset, r17
+0000d6 e012                          ldi r17, PORT_ISC
+0000d7 9310 0411                     sts BTN_POW_reg + BTM_POW_PIN_offset, r17
                                  
-0000dc 9508                          ret
+0000d9 9508                          ret
                                  
                                  init:
-0000dd dfac                      	rcall adc_init
-0000de dfb2                      	rcall port_init
-0000df dff7                      	rcall timer_init
-0000e0 dff8                      	rcall interrupt_init
+0000da dfac                      	rcall adc_init
+0000db dfb2                      	rcall port_init
+0000dc dff7                      	rcall timer_init
+0000dd dff8                      	rcall interrupt_init
                                  ; Initial values
-0000e1 ef0f                      	ldi r16, 0xFF ; LED Power state
-0000e2 2e60                      	mov pow_state_val_reg, r16
-0000e3 9478                      	sei
+0000de ef0f                      	ldi r16, 0xFF ; LED Power state
+0000df 2e60                      	mov pow_state_val_reg, r16
+0000e0 9478                      	sei
                                  
-0000e4 c000                      	rjmp loop
+0000e1 c000                      	rjmp loop
                                  
                                  loop:
-0000e5 df65                      	rcall get_pot_vals
-0000e6 df6d                      	rcall drive_leds_pwm
+0000e2 df65                      	rcall get_pot_vals
+0000e3 df6d                      	rcall drive_leds_pwm
 
 
 RESOURCE USE INFORMATION
@@ -4962,15 +4960,15 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega4809" register use summary:
-x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   3 r2 :   4 r3 :   2 r4 :   2 
-r5 :   2 r6 :   3 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  82 r17:  29 r18:   6 r19:   6 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:  17 r25:   6 r26:   0 r27:   0 r28:   0 
-r29:   0 r30:   0 r31:   0 
-Registers used: 12 out of 35 (34.3%)
+x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   1 r2 :   2 r3 :   2 r4 :   2 
+r5 :   2 r6 :   4 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
+r13:   0 r14:   0 r15:   0 r16:  75 r17:  29 r18:   6 r19:   6 r20:   0 
+r21:   0 r22:   0 r23:   0 r24:  18 r25:   6 r26:   0 r27:   0 r28:   0 
+r29:   0 r30:   0 r31:   7 
+Registers used: 13 out of 35 (37.1%)
 
 "ATmega4809" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   6 
+.lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   7 
 andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
@@ -4982,8 +4980,8 @@ cpi   :   1 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :   2 
 ld    :   0 ldd   :   0 ldi   :  27 lds   :  12 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :  19 movw  :   0 mul   :   1 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   3 ori   :   0 out   :   2 pop   :  11 
-push  :  11 rcall :  21 ret   :  14 reti  :   2 rjmp  :   4 rol   :   0 
+neg   :   0 nop   :   0 or    :   3 ori   :   0 out   :   2 pop   :   9 
+push  :   9 rcall :  21 ret   :  14 reti  :   2 rjmp  :   4 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   1 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
@@ -4994,8 +4992,8 @@ Instructions used: 22 out of 112 (19.6%)
 "ATmega4809" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0001d0    444      0    444   49152   0.9%
+[.cseg] 0x000000 0x0001ca    438      0    438   49152   0.9%
 [.dseg] 0x002800 0x002800      0      0      0    6144   0.0%
 [.eseg] 0x000000 0x000000      0      0      0     256   0.0%
 
-Assembly complete, 0 errors, 0 warnings
+Assembly complete, 0 errors, 1 warnings
