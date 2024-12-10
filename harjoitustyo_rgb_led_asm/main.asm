@@ -27,11 +27,17 @@ jmp TCB0_ISR
 .equ ADC_CTRLA_CONF = (ADC_ENABLE | ADC_RESSEL)
 
 ; TCA0 configuration
-; TCA0_CTRLA configuration
 .equ TCA_SINGLE_CLKSEL_DIV = TCA_SINGLE_CLKSEL_DIV64_gc
 .equ TCA0_CMPxEN = (TCA_SINGLE_CMP0EN_bm | TCA_SINGLE_CMP1EN_bm | TCA_SINGLE_CMP2EN_bm)
 .equ TCA0_CTRLA_CONF = (TCA_SINGLE_CLKSEL_DIV | TCA_SINGLE_ENABLE_bm)
 .equ TCA0_CTRLB_CONF = (TCA0_CMPxEN | TCA_SINGLE_WGMODE_SINGLESLOPE_gc)
+
+; TCB configuration
+.equ TCB0_CLKSEL = TCB_CLKSEL_CLKDIV2_gc
+.equ TCB0_CNT_MODE = TCB_CNTMODE_INT_gc
+.equ TCB0_CTRLA_CONF = (TCB0_CLKSEL | TCB_ENABLE_bm)
+.equ TCB0_CTRLB_CONF = (TCB0_CNT_MODE)
+.equ TCB0_INTCTRL_CONF = TCB_CAPT_bm
 
 ; Button interrupt configuration
 .equ PORT_ISC = PORT_ISC_RISING_gc
@@ -59,16 +65,16 @@ jmp TCB0_ISR
 
 ; Buttons
 .equ BTN_POW_reg = PORTA_base
-.equ BTN_POW_bp = 0x01
-.equ BTM_POW_PIN_offset = (PORT_PIN0CTRL_offset + BTN_POW_bp)
+.equ BTN_POW_bp = 1
+.equ BTN_POW_PIN_offset = (PORT_PIN0CTRL_offset + BTN_POW_bp)
 .equ BTN_POW_DIR = BTN_POW_reg + PORT_DIR_offset
 .equ BTN_POW_IN = BTN_POW_reg + PORT_IN_offset
 .equ BTN_POW_bm = (1 << BTN_POW_bp)
 .equ BTN_POW_INTFLAGS = BTN_POW_reg + PORT_INTFLAGS_offset
 
 .equ BTN_MOD_reg = PORTA_base
-.equ BTN_MOD_bp = 0x00
-.equ BTM_MOD_PIN_offset = (PORT_PIN0CTRL_offset + BTN_MOD_bp)
+.equ BTN_MOD_bp = 0
+.equ BTN_MOD_PIN_offset = (PORT_PIN0CTRL_offset + BTN_MOD_bp)
 .equ BTN_MOD_DIR = BTN_MOD_reg + PORT_DIR_offset
 .equ BTN_MOD_IN = BTN_MOD_reg + PORT_IN_offset
 .equ BTN_MOD_bm = (1 << BTN_MOD_bp)
@@ -117,13 +123,6 @@ jmp TCB0_ISR
 .equ TCA0_SINGLE_PERH_val = 0x00
 
 .equ PORTMUX_TCA0_reg = PORTMUX_TCA0_PORTB_gc
-
-; TCB configuration
-.equ TCB0_CLKSEL = TCB_CLKSEL_CLKDIV2_gc
-.equ TCB0_CNT_MODE = TCB_CNTMODE_INT_gc
-.equ TCB0_CTRLA_CONF = (TCB0_CLKSEL | TCB_ENABLE_bm)
-.equ TCB0_CTRLB_CONF = (TCB0_CNT_MODE)
-.equ TCB0_INTCTRL_CONF = TCB_CAPT_bm
 
 ; LED duty cycle registers
 .equ LED_R_dc_L = TCA0_SINGLE_CMP0L
@@ -178,13 +177,10 @@ wait_for_conversion:
 ; Also does bitwise and between calculated value and powerstate (pow_state_val_reg)
 ; f(r24, r25, pow_state_val_reg) = (x * y / 256) & pow_state_val_reg
 calculate_brightness:
-	push pot_t_val_reg
-	push r1
 	mul r24, r25
 	mov r24, r1
+	and r24, pow_state_val_reg
 	clr r25
-	pop r1
-	pop pot_t_val_reg
 	ret
 
 ; Reads Total potentiometer val and stores it into pot_t_val_reg
@@ -257,6 +253,11 @@ set_mode_speed:
 	sts TCB0_CCMPH, r16
 	ret
 
+update_mode_speed:
+	rcall get_pot_t_val
+	rcall set_mode_speed
+	ret
+
 ; Gets values from pot_t_val_reg (Total), pot_r_val_reg (R), pot_g_val_reg (G) and pot_b_val_reg (B)
 drive_leds_pwm:
 	; Push work registers to stack
@@ -304,19 +305,33 @@ drive_leds_pwm:
 	ret
 
 PORTA_ISR:
+	; Check for power button interrupt
 	lds r16, BTN_POW_INTFLAGS
 	andi r16, BTN_POW_bm
 	cpi r16, BTN_POW_bm
-	breq porta_isr_pow
-	; Reset all interrupt flags
-	lds r16, BTN_POW_INTFLAGS
-	sts BTN_POW_INTFLAGS, r16
+	breq POWER_ISR
+	
+	; Check for mode button interrupt
+	lds r16, BTN_MOD_INTFLAGS
+	andi r16, BTN_MOD_bm
+	cpi r16, BTN_MOD_bm
+	breq MODE_ISR
+
+	; Reset porta interrupt flags
+	lds r16, PORTA_INTFLAGS
+	sts PORTA_INTFLAGS, r16
 	reti
 	
-porta_isr_pow:
+POWER_ISR:
 	com pow_state_val_reg
 	ldi r16, BTN_POW_bm
 	sts BTN_POW_INTFLAGS, r16
+	reti
+
+MODE_ISR:
+	inc mode_state_val_reg
+	lds r16, BTN_MOD_bm
+	sts BTN_MOD_INTFLAGS, r16
 	reti
 
 TCB0_ISR:
@@ -341,6 +356,12 @@ port_init:
 	com r17
 	and r16, r17
 	sts BTN_POW_DIR, r16
+
+	lds r16, BTN_MOD_DIR
+	ldi r17, BTN_MOD_bm
+	com r17
+	and r16, r17
+	sts BTN_MOD_DIR, r16
 
 
 	; LED pin I/O directions
@@ -419,9 +440,9 @@ timer_init:
 	ret
 
 interrupt_init:
-    ; Configure PA1 (BTN_POW) for interrupt
-    ldi r17, PORT_ISC
-    sts BTN_POW_reg + BTM_POW_PIN_offset, r17
+    ldi r17, PORT_ISC ; Interrupt on rising edge
+    sts BTN_POW_reg + BTN_POW_PIN_offset, r17
+	sts BTN_MOD_reg + BTN_MOD_PIN_offset, r17
 
     ret
 
@@ -446,8 +467,7 @@ mode_manual:
 	rjmp loop
 
 mode_breath:
-	rcall get_pot_t_val
-	rcall set_mode_speed
+	rcall update_mode_speed
 	mov r16, mode_step_val_reg
 	; r17 -> (255 - mode_step_val_reg)
 	ldi r17, 0xFF
@@ -459,22 +479,22 @@ mode_breath:
 	muls r16, r17
 	rcall get_rgb_vals
 	rcall drive_leds_pwm
-
 	rjmp loop
-
-mode_rainbow:
-	rcall get_pot_t_val
-	rcall set_mode_speed
-
-	rjmp loop	
 
 loop:
 	mov r16, mode_state_val_reg
-	andi r16, 0x03
+	; DEBUG
+;	mov r17, pot_t_val_reg
+;	cpi r17, 0xFF
+;	breq debug
+	; DEBUG END
+	andi r16, 0x01
 	cpi r16, 0x00
 	breq mode_manual
 	cpi r16, 0x01
 	breq mode_breath
-	cpi r16, 0x02
-	breq mode_rainbow
+	rjmp loop
+
+debug:
+	nop
 	rjmp loop

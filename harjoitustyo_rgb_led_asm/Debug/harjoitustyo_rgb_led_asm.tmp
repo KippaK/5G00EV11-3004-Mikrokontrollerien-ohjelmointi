@@ -1,18 +1,18 @@
 <ASSEMBLER_INFO>
  <VERSION>2.2.8</VERSION>
  <DEVICE>"ATmega4809"</DEVICE>
- <WORKING_DIR>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\Debug</WORKING_DIR>
+ <WORKING_DIR>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\Debug</WORKING_DIR>
  <INCLUDE_PATH>
-  <DIR>E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
-  <DIR>E:\Sovellukset\MicrochipStudio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</SOURCE_FILE>
  <INCLUDED_FILES>
-  <FILE>E:/Sovellukset\MicrochipStudio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc</FILE>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m4809def.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\Debug\harjoitustyo_rgb_led_asm.obj</FILE>
+  <FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\Debug\harjoitustyo_rgb_led_asm.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
   <FILE>harjoitustyo_rgb_led_asm.hex</FILE>
@@ -22,31 +22,33 @@
   <FILE>harjoitustyo_rgb_led_asm.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <start><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>146</LINE></start>
-  <PORTA_ISR><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>306</LINE></PORTA_ISR>
-  <TCB0_ISR><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>322</LINE></TCB0_ISR>
-  <init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>428</LINE></init>
-  <adc_read><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>157</LINE></adc_read>
-  <wait_for_conversion><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>163</LINE></wait_for_conversion>
-  <calculate_brightness><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>180</LINE></calculate_brightness>
-  <get_pot_t_val><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>191</LINE></get_pot_t_val>
-  <get_pot_r_val><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>202</LINE></get_pot_r_val>
-  <get_pot_g_val><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>213</LINE></get_pot_g_val>
-  <get_pot_b_val><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>224</LINE></get_pot_b_val>
-  <get_pot_vals><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>236</LINE></get_pot_vals>
-  <get_rgb_vals><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>246</LINE></get_rgb_vals>
-  <set_mode_speed><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>253</LINE></set_mode_speed>
-  <drive_leds_pwm><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>261</LINE></drive_leds_pwm>
-  <porta_isr_pow><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>316</LINE></porta_isr_pow>
-  <adc_init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>330</LINE></adc_init>
-  <port_init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>337</LINE></port_init>
-  <tca_init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>388</LINE></tca_init>
-  <tcb_init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>404</LINE></tcb_init>
-  <timer_init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>416</LINE></timer_init>
-  <interrupt_init><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>421</LINE></interrupt_init>
-  <loop><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>471</LINE></loop>
-  <mode_manual><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>443</LINE></mode_manual>
-  <mode_breath><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>448</LINE></mode_breath>
-  <mode_rainbow><FILE>E:\Koulu\TAMK\Mikrokontrollereiden-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>465</LINE></mode_rainbow>
+  <start><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>145</LINE></start>
+  <PORTA_ISR><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>307</LINE></PORTA_ISR>
+  <TCB0_ISR><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>337</LINE></TCB0_ISR>
+  <init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>449</LINE></init>
+  <adc_read><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>156</LINE></adc_read>
+  <wait_for_conversion><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>162</LINE></wait_for_conversion>
+  <calculate_brightness><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>179</LINE></calculate_brightness>
+  <get_pot_t_val><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>187</LINE></get_pot_t_val>
+  <get_pot_r_val><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>198</LINE></get_pot_r_val>
+  <get_pot_g_val><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>209</LINE></get_pot_g_val>
+  <get_pot_b_val><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>220</LINE></get_pot_b_val>
+  <get_pot_vals><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>232</LINE></get_pot_vals>
+  <get_rgb_vals><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>242</LINE></get_rgb_vals>
+  <set_mode_speed><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>249</LINE></set_mode_speed>
+  <update_mode_speed><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>256</LINE></update_mode_speed>
+  <drive_leds_pwm><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>262</LINE></drive_leds_pwm>
+  <POWER_ISR><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>325</LINE></POWER_ISR>
+  <MODE_ISR><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>331</LINE></MODE_ISR>
+  <adc_init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>345</LINE></adc_init>
+  <port_init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>352</LINE></port_init>
+  <tca_init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>409</LINE></tca_init>
+  <tcb_init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>425</LINE></tcb_init>
+  <timer_init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>437</LINE></timer_init>
+  <interrupt_init><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>442</LINE></interrupt_init>
+  <loop><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>484</LINE></loop>
+  <mode_manual><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>464</LINE></mode_manual>
+  <mode_breath><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>469</LINE></mode_breath>
+  <debug><FILE>C:\Users\antti\TAMK\Mikrokontrollerien-ohjelmointi\harjoitustyo_rgb_led_asm\main.asm</FILE><LINE>498</LINE></debug>
  </LABELS>
 </ASSEMBLER_INFO>
