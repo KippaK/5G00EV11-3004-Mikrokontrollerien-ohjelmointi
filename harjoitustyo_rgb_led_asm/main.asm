@@ -9,6 +9,7 @@
 
 .org 0
 jmp start
+; Interrupt vector to Interrupt service routine mapping
 .org PORTA_PORT_vect
 jmp PORTA_ISR
 .org TCB0_INT_vect
@@ -106,9 +107,6 @@ jmp TCB0_ISR
 .equ POT_B_bm = (1 << POT_B_bp)
 .equ POT_B_mc = POT_B_bp
 
-; ADC0_COMMAND
-.equ ADC_STCONV = 0b1
-
 ; TCA0_CMPBUF
 .equ TCA0_SINGLE_CMP0L = TCA0_SINGLE_CMP0
 .equ TCA0_SINGLE_CMP0H = TCA0_SINGLE_CMP0L + 0x01
@@ -156,7 +154,7 @@ start:
 adc_read:
 	; Start conversion
 	push r16
-	ldi r16, ADC_STCONV
+	ldi r16, ADC_STCONV_bm
 	sts ADC0_COMMAND, r16
 
 wait_for_conversion:
@@ -259,6 +257,7 @@ update_mode_speed:
 	ret
 
 ; Gets values from pot_t_val_reg (Total), pot_r_val_reg (R), pot_g_val_reg (G) and pot_b_val_reg (B)
+; Drives LED PWM pins based on given valuess
 drive_leds_pwm:
 	; Push work registers to stack
 	push r16
@@ -322,12 +321,14 @@ PORTA_ISR:
 	sts PORTA_INTFLAGS, r16
 	reti
 	
+; Handles power button press
 POWER_ISR:
 	com pow_state_val_reg
 	ldi r16, BTN_POW_bm
 	sts BTN_POW_INTFLAGS, r16
 	reti
 
+; Handles mode button press
 MODE_ISR:
 	inc mode_state_val_reg
 	ldi r16, BTN_MOD_bm
@@ -364,7 +365,7 @@ port_init:
 	sts BTN_MOD_DIR, r16
 
 
-	; LED pin I/O directions
+	; Potentiometer pin I/O directions
 	lds r16, POT_T_DIR
 	ldi r17, POT_T_bm
 	com r17
@@ -466,13 +467,12 @@ mode_manual:
 	rcall drive_leds_pwm
 	rjmp loop
 
+; Sets total brightness of 
 mode_breath:
 	rcall update_mode_speed
 	mov r16, mode_step_val_reg
-	; r17 -> (255 - mode_step_val_reg)
 	ldi r17, 0xFF
 	sub r17, r16
-	; if r16 >= 128 -> move r17 into r16
 	sbrc r16, 7
 	mov r16, r17
 	ldi r17, 0x02
